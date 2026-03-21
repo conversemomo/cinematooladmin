@@ -261,7 +261,8 @@
     transition: border-color 0.15s, box-shadow 0.15s;
   }
   .proposal-slide:hover { border-color: var(--signal-wave); box-shadow: 0 4px 14px rgba(66,140,175,0.2); }
-  .proposal-slide img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .slide-thumb { position: absolute; inset: 0; overflow: hidden; pointer-events: none; background: #111; }
+  .slide-thumb iframe { width: 960px; height: 540px; border: none; display: block; transform-origin: 0 0; pointer-events: none; }
   .slide-label {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -745,13 +746,28 @@ function renderProposal() {
   grid.innerHTML = proposalSlides.map((s, i) => `
     <div class="proposal-slide" draggable="true"
          ondragstart="dragStart(event,${i})" ondragover="dragOver(event)" ondrop="drop(event,${i})">
-      <img src="${s.path}" alt="${s.label}" loading="lazy" onerror="this.style.visibility='hidden'">
+      <div class="slide-thumb">
+        <iframe src="${s.path}" scrolling="no" tabindex="-1"></iframe>
+      </div>
       <span class="slide-seq">${i+1}</span>
       <div class="slide-label">${s.label}</div>
       <button class="slide-remove" onclick="removeSlide(${i})" title="Remove slide">✕</button>
     </div>
   `).join("");
+  scaleSlideIframes();
 }
+
+function scaleSlideIframes() {
+  requestAnimationFrame(() => {
+    document.querySelectorAll('.proposal-slide').forEach(card => {
+      const iframe = card.querySelector('.slide-thumb iframe');
+      if (!iframe) return;
+      const scale = card.clientWidth / 960;
+      iframe.style.transform = 'scale(' + scale + ')';
+    });
+  });
+}
+window.addEventListener('resize', scaleSlideIframes);
 
 // ─── DRAG TO REORDER ─────────────────────────────────────────────────────────
 let dragIdx = null;

@@ -308,6 +308,36 @@ textarea { resize: vertical; }
           </div>
         </div>
 
+        <div class="sec-hdr" style="margin-top:4px">
+          <span class="sec-lbl">Product Image</span>
+        </div>
+        <div class="fg" style="margin-bottom:14px">
+          <div class="fr full">
+            <label>Upload Image <span style="font-weight:400;text-transform:none;letter-spacing:0">(embeds as base64)</span></label>
+            <input type="file" id="nfImgFile" accept="image/*" onchange="handleNewImgUpload(this)">
+          </div>
+          <div class="fr full">
+            <label>Or enter image URL <span style="font-weight:400;text-transform:none;letter-spacing:0">(relative path, e.g. ../../assets/mk/image.png)</span></label>
+            <input type="text" id="nfImgSrc" placeholder="../../assets/mk/image.png">
+          </div>
+          <div class="fr">
+            <label>Left (px)</label>
+            <input type="number" id="nfImgLeft" placeholder="110">
+          </div>
+          <div class="fr">
+            <label>Top (px)</label>
+            <input type="number" id="nfImgTop" placeholder="297">
+          </div>
+          <div class="fr">
+            <label>Width (px)</label>
+            <input type="number" id="nfImgWidth" placeholder="190">
+          </div>
+          <div class="fr">
+            <label>Height (px)</label>
+            <input type="number" id="nfImgHeight" placeholder="87">
+          </div>
+        </div>
+
         <div class="sec-hdr">
           <span class="sec-lbl">Specifications</span>
           <button class="btn btn-ghost btn-sm" onclick="addSpec(true)">+ Add Row</button>
@@ -502,8 +532,9 @@ function showNewPanel() {
   newBrand = null; newSpecRows = []; filenameManual = false;
   ['nb-mk','nb-sonance','nb-wisdom'].forEach(id =>
     document.getElementById(id).className = 'brand-btn');
-  ['nFilename','nMfr','nfBrand','nfModel','nfSidebar','nfBullets']
+  ['nFilename','nMfr','nfBrand','nfModel','nfSidebar','nfBullets','nfImgSrc','nfImgLeft','nfImgTop','nfImgWidth','nfImgHeight']
     .forEach(id => document.getElementById(id).value = '');
+  document.getElementById('nfImgFile').value = '';
   renderSpecsEditor('newSpecsEditor', newSpecRows, true);
 }
 
@@ -556,11 +587,16 @@ function createProduct() {
   if (!model)    return toast('Enter a model name', 'err');
 
   const newHtml = applyForm(tplCache[newBrand], true, {
-    brand:   document.getElementById('nfBrand').value,
+    brand:     document.getElementById('nfBrand').value,
     model,
-    sidebar: document.getElementById('nfSidebar').value,
-    bullets: document.getElementById('nfBullets').value,
-    rows:    newSpecRows
+    sidebar:   document.getElementById('nfSidebar').value,
+    bullets:   document.getElementById('nfBullets').value,
+    rows:      newSpecRows,
+    imgSrc:    document.getElementById('nfImgSrc').value.trim(),
+    imgLeft:   document.getElementById('nfImgLeft').value.trim(),
+    imgTop:    document.getElementById('nfImgTop').value.trim(),
+    imgWidth:  document.getElementById('nfImgWidth').value.trim(),
+    imgHeight: document.getElementById('nfImgHeight').value.trim(),
   });
   downloadHTML(newHtml, filename);
   document.getElementById('createStatus').textContent =
@@ -614,29 +650,25 @@ function applyForm(html, isNew, ov) {
     '$1\n' + trHtml + '\n  $2');
 
   // Product image src
-  if (!isNew) {
-    const imgSrc = document.getElementById('fImgSrc').value.trim();
-    if (imgSrc) {
-      // id before src  e.g. id="productImg" ... src="..."
-      out = out.replace(/(id="productImg"[^>]*\bsrc=")[^"]*(")/,   '$1' + imgSrc + '$2');
-      // src before id  e.g. src="..." ... id="productImg"
-      out = out.replace(/(<img\b[^>]*\bsrc=")([^"]*)("[^>]*\bid="productImg")/,
-        '$1' + imgSrc + '$3');
-    }
-    // Product image CSS position/size
-    const left   = document.getElementById('fImgLeft').value.trim();
-    const top    = document.getElementById('fImgTop').value.trim();
-    const width  = document.getElementById('fImgWidth').value.trim();
-    const height = document.getElementById('fImgHeight').value.trim();
-    if (left || top || width || height) {
-      out = out.replace(/(\.product-image\s*\{)([^}]*)(\})/, (m, open, inner, close) => {
-        if (left)   inner = inner.replace(/\bleft:\s*[^;]+/, 'left: ' + left + 'px');
-        if (top)    inner = inner.replace(/\btop:\s*[^;]+/,  'top: '  + top  + 'px');
-        if (width)  inner = inner.replace(/\bwidth:\s*[^;]+/,'width: '+ width + 'px');
-        if (height) inner = inner.replace(/\bheight:\s*[^;]+/,'height: '+ height + 'px');
-        return open + inner + close;
-      });
-    }
+  const imgSrc   = isNew ? (ov.imgSrc   || '') : document.getElementById('fImgSrc').value.trim();
+  const imgLeft  = isNew ? (ov.imgLeft  || '') : document.getElementById('fImgLeft').value.trim();
+  const imgTop   = isNew ? (ov.imgTop   || '') : document.getElementById('fImgTop').value.trim();
+  const imgWidth = isNew ? (ov.imgWidth || '') : document.getElementById('fImgWidth').value.trim();
+  const imgHeight= isNew ? (ov.imgHeight|| '') : document.getElementById('fImgHeight').value.trim();
+
+  if (imgSrc) {
+    out = out.replace(/(id="productImg"[^>]*\bsrc=")[^"]*(")/,  '$1' + imgSrc + '$2');
+    out = out.replace(/(<img\b[^>]*\bsrc=")([^"]*)("[^>]*\bid="productImg")/,
+      '$1' + imgSrc + '$3');
+  }
+  if (imgLeft || imgTop || imgWidth || imgHeight) {
+    out = out.replace(/(\.product-image\s*\{)([^}]*)(\})/, (m, open, inner, close) => {
+      if (imgLeft)   inner = inner.replace(/\bleft:\s*[^;]+/,  'left: '   + imgLeft   + 'px');
+      if (imgTop)    inner = inner.replace(/\btop:\s*[^;]+/,   'top: '    + imgTop    + 'px');
+      if (imgWidth)  inner = inner.replace(/\bwidth:\s*[^;]+/, 'width: '  + imgWidth  + 'px');
+      if (imgHeight) inner = inner.replace(/\bheight:\s*[^;]+/,'height: ' + imgHeight + 'px');
+      return open + inner + close;
+    });
   }
 
   return out;
@@ -726,6 +758,13 @@ function extractImgCss(html) {
     width:  (block.match(/\bwidth:\s*([\d.-]+)px/)  || [])[1] || '',
     height: (block.match(/\bheight:\s*([\d.-]+)px/) || [])[1] || '',
   };
+}
+
+function handleNewImgUpload(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => { document.getElementById('nfImgSrc').value = e.target.result; };
+  reader.readAsDataURL(input.files[0]);
 }
 
 function handleImgUpload(input) {
