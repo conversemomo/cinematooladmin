@@ -260,6 +260,8 @@
     transition: border-color 0.15s, box-shadow 0.15s;
   }
   .proposal-slide:hover { border-color: var(--signal-wave); box-shadow: 0 4px 14px rgba(66,140,175,0.2); }
+  .proposal-slide.dragging { opacity: 0.35; cursor: grabbing; }
+  .proposal-slide.drag-over { border-color: var(--signal-wave); box-shadow: -4px 0 0 var(--signal-wave), 0 4px 14px rgba(66,140,175,0.25); }
   .slide-thumb { position: absolute; inset: 0; overflow: hidden; pointer-events: none; background: #111; }
   .slide-thumb iframe { position: absolute; top: 0; left: 0; width: 960px; height: 540px; border: none; transform-origin: 0 0; pointer-events: none; }
   .slide-label {
@@ -368,14 +370,20 @@
   @media print {
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     body > *:not(#print-area) { display: none !important; visibility: hidden !important; }
-    #print-area { display: block !important; visibility: visible !important; position: fixed; top: 0; left: 0; width: 100%; }
+    #print-area { display: block !important; visibility: visible !important; }
+    .print-slide-wrapper {
+      display: block;
+      width: 960px; height: 540px;
+      overflow: hidden;
+      page-break-after: always;
+      break-after: page;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
     .print-slide-frame {
       display: block;
       width: 960px; height: 540px;
       border: none;
-      page-break-after: always;
-      break-after: page;
-      visibility: visible !important;
     }
     @page { size: 960px 540px landscape; margin: 0; }
   }
@@ -840,11 +848,16 @@ function rebuildProposal() {
     return files[idx] ? `products/${prefix}/intro/${files[idx]}` : null;
   };
 
-  // Derive HTML slide path from product id (e.g. "mk-lcr750c" → "products/mk/lcr750c.html")
+  // Derive HTML slide path from product id, respecting THUMB_OVERRIDES for renamed files
   const prodHtml = (id) => {
     const dash = id.indexOf('-');
     if (dash < 0) return null;
-    return `products/${id.substring(0, dash)}/${id.substring(dash + 1)}.html`;
+    const pfx = id.substring(0, dash);
+    const override = THUMB_OVERRIDES[id];
+    if (override && !override.endsWith('.jpg') && !override.startsWith('slides/')) {
+      return `products/${pfx}/${override}`;
+    }
+    return `products/${pfx}/${id.substring(dash + 1)}.html`;
   };
 
   const pushGroup = (key) =>
@@ -953,7 +966,8 @@ function renderProposal() {
 
   grid.innerHTML = proposalSlides.map((s, i) => `
     <div class="proposal-slide" draggable="true"
-         ondragstart="dragStart(event,${i})" ondragover="dragOver(event)" ondrop="drop(event,${i})">
+         ondragstart="dragStart(event,${i})" ondragover="dragOver(event)"
+         ondragleave="dragLeave(event)" ondragend="dragEnd(event)" ondrop="drop(event,${i})">
       <div class="slide-thumb">
         <iframe src="${s.path}" scrolling="no" tabindex="-1" onload="hideSlideOverlay(this)"></iframe>
       </div>
@@ -995,11 +1009,29 @@ window.addEventListener('resize', scaleSlideIframes);
 
 // ─── DRAG TO REORDER ─────────────────────────────────────────────────────────
 let dragIdx = null;
-function dragStart(e, i) { dragIdx = i; e.dataTransfer.effectAllowed = "move"; }
-function dragOver(e) { e.preventDefault(); e.dataTransfer.dropEffect = "move"; }
+function dragStart(e, i) {
+  dragIdx = i;
+  e.dataTransfer.effectAllowed = "move";
+  e.currentTarget.classList.add('dragging');
+}
+function dragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = "move";
+  document.querySelectorAll('.proposal-slide').forEach(el => el.classList.remove('drag-over'));
+  e.currentTarget.closest('.proposal-slide')?.classList.add('drag-over');
+}
+function dragLeave(e) {
+  if (!e.currentTarget.contains(e.relatedTarget)) {
+    e.currentTarget.classList.remove('drag-over');
+  }
+}
+function dragEnd(e) {
+  document.querySelectorAll('.proposal-slide').forEach(el => el.classList.remove('dragging', 'drag-over'));
+}
 function drop(e, i) {
   e.preventDefault();
-  if (dragIdx === null || dragIdx === i) return;
+  document.querySelectorAll('.proposal-slide').forEach(el => el.classList.remove('dragging', 'drag-over'));
+  if (dragIdx === null || dragIdx === i) { dragIdx = null; return; }
   const moved = proposalSlides.splice(dragIdx, 1)[0];
   proposalSlides.splice(i, 0, moved);
   dragIdx = null;
@@ -1055,25 +1087,32 @@ async function confirmExport() {
   const printArea = document.createElement('div');
   printArea.id = 'print-area';
 
-  const iframes = [];
+  const loadPromises = [];
+  document.body.appendChild(printArea);
+
   for (let i = 0; i < proposalSlides.length; i++) {
     msg.textContent = `Loading slide ${i + 1} of ${proposalSlides.length}…`;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'print-slide-wrapper';
+
     const iframe = document.createElement('iframe');
     iframe.className = 'print-slide-frame';
+
+    // Register onload BEFORE setting src so we never miss it
+    loadPromises.push(new Promise(resolve => {
+      iframe.onload = resolve;
+      iframe.onerror = resolve;
+      setTimeout(resolve, 12000);
+    }));
+
+    wrapper.appendChild(iframe);
+    printArea.appendChild(wrapper);
     iframe.src = proposalSlides[i].path;
-    printArea.appendChild(iframe);
-    iframes.push(iframe);
-    // Append to DOM immediately so browser starts loading
-    if (i === 0) document.body.appendChild(printArea);
   }
 
   // Wait for all iframes to load
-  await Promise.all(iframes.map(f => new Promise(resolve => {
-    f.onload = resolve;
-    f.onerror = resolve;
-    // Safety timeout per frame
-    setTimeout(resolve, 10000);
-  })));
+  await Promise.all(loadPromises);
 
   // Small extra delay for fonts & images inside iframes
   await new Promise(r => setTimeout(r, 800));
