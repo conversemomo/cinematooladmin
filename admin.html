@@ -291,20 +291,20 @@ textarea { resize: vertical; }
           </div>
           <div class="fr">
             <label>Brand Name</label>
-            <input type="text" id="nfBrand" placeholder="e.g. ARCAM">
+            <input type="text" id="nfBrand" placeholder="e.g. ARCAM" oninput="scheduleNewPreview()">
           </div>
           <div class="fr">
             <label>Model Name</label>
-            <input type="text" id="nfModel" placeholder="e.g. AVR5" oninput="autoFilename(this.value)">
+            <input type="text" id="nfModel" placeholder="e.g. AVR5" oninput="autoFilename(this.value);scheduleNewPreview()">
           </div>
           <div class="fr">
             <label>Sidebar Text</label>
-            <input type="text" id="nfSidebar" placeholder="e.g. AV Receiver">
+            <input type="text" id="nfSidebar" placeholder="e.g. AV Receiver" oninput="scheduleNewPreview()">
           </div>
           <div class="fr"><!-- spacer --></div>
           <div class="fr full">
             <label>Bullet Points <span style="font-weight:400;text-transform:none;letter-spacing:0">(one per line)</span></label>
-            <textarea id="nfBullets" rows="5" placeholder="Feature 1&#10;Feature 2&#10;Feature 3"></textarea>
+            <textarea id="nfBullets" rows="5" placeholder="Feature 1&#10;Feature 2&#10;Feature 3" oninput="scheduleNewPreview()"></textarea>
           </div>
         </div>
 
@@ -318,23 +318,23 @@ textarea { resize: vertical; }
           </div>
           <div class="fr full">
             <label>Or enter image URL <span style="font-weight:400;text-transform:none;letter-spacing:0">(relative path, e.g. ../../assets/mk/image.png)</span></label>
-            <input type="text" id="nfImgSrc" placeholder="../../assets/mk/image.png">
+            <input type="text" id="nfImgSrc" placeholder="../../assets/mk/image.png" oninput="scheduleNewPreview()">
           </div>
           <div class="fr">
             <label>Left (px)</label>
-            <input type="number" id="nfImgLeft" placeholder="110">
+            <input type="number" id="nfImgLeft" placeholder="110" oninput="scheduleNewPreview()">
           </div>
           <div class="fr">
             <label>Top (px)</label>
-            <input type="number" id="nfImgTop" placeholder="297">
+            <input type="number" id="nfImgTop" placeholder="297" oninput="scheduleNewPreview()">
           </div>
           <div class="fr">
             <label>Width (px)</label>
-            <input type="number" id="nfImgWidth" placeholder="190">
+            <input type="number" id="nfImgWidth" placeholder="190" oninput="scheduleNewPreview()">
           </div>
           <div class="fr">
             <label>Height (px)</label>
-            <input type="number" id="nfImgHeight" placeholder="87">
+            <input type="number" id="nfImgHeight" placeholder="87" oninput="scheduleNewPreview()">
           </div>
         </div>
 
@@ -353,6 +353,14 @@ textarea { resize: vertical; }
           <span class="save-note" id="createStatus"></span>
         </div>
       </div>
+      <div class="preview-wrap" id="newPreviewWrap" style="display:none">
+        <div class="preview-bar">
+          <span>Live Preview</span><span>960 × 540</span>
+        </div>
+        <div class="preview-box" id="newPreviewBox">
+          <iframe id="newPreviewFrame"></iframe>
+        </div>
+      </div>
     </div><!-- /newPanel -->
 
   </div><!-- /main -->
@@ -369,7 +377,8 @@ let newSpecRows   = [];
 let newBrand      = null;
 let tplCache      = {};
 let filenameManual = false;
-let previewTimer   = null;
+let previewTimer      = null;
+let newPreviewTimer   = null;
 
 // ── BOOT ───────────────────────────────────────────────────────────────
 window.addEventListener('DOMContentLoaded', () => {
@@ -535,6 +544,7 @@ function showNewPanel() {
   ['nFilename','nMfr','nfBrand','nfModel','nfSidebar','nfBullets','nfImgSrc','nfImgLeft','nfImgTop','nfImgWidth','nfImgHeight']
     .forEach(id => document.getElementById(id).value = '');
   document.getElementById('nfImgFile').value = '';
+  document.getElementById('newPreviewWrap').style.display = 'none';
   renderSpecsEditor('newSpecsEditor', newSpecRows, true);
 }
 
@@ -567,6 +577,7 @@ async function selectNewBrand(brand) {
     }
     if (!found) throw new Error('No valid product template found');
     document.getElementById('tplStatus').textContent = '✓ Template ready — fill in the details below';
+    scheduleNewPreview();
   } catch(e) {
     document.getElementById('tplStatus').textContent = '✗ Could not load template: ' + e.message;
   }
@@ -707,12 +718,60 @@ function scalePreview() {
 }
 window.addEventListener('resize', () => { if (current.html) scalePreview(); });
 
+// ── NEW PRODUCT PREVIEW ────────────────────────────────────────────────
+function scheduleNewPreview() {
+  clearTimeout(newPreviewTimer);
+  newPreviewTimer = setTimeout(() => {
+    if (!newBrand || !tplCache[newBrand]) return;
+    const html = applyForm(tplCache[newBrand], true, {
+      brand:     document.getElementById('nfBrand').value,
+      model:     document.getElementById('nfModel').value,
+      sidebar:   document.getElementById('nfSidebar').value,
+      bullets:   document.getElementById('nfBullets').value,
+      rows:      newSpecRows,
+      imgSrc:    document.getElementById('nfImgSrc').value.trim(),
+      imgLeft:   document.getElementById('nfImgLeft').value.trim(),
+      imgTop:    document.getElementById('nfImgTop').value.trim(),
+      imgWidth:  document.getElementById('nfImgWidth').value.trim(),
+      imgHeight: document.getElementById('nfImgHeight').value.trim(),
+    });
+    refreshNewPreview(html, newBrand);
+  }, 350);
+}
+
+function refreshNewPreview(html, brand) {
+  const base = new URL('products/' + brand + '/', window.location.href).href;
+  let preview = html
+    .replace(/<p class="demo-label"[\s\S]*?<\/p>/, '')
+    .replace(/<div class="edit-controls"[\s\S]*?<\/div>/, '')
+    .replace(/<div id="layoutPanel"[\s\S]*?<\/div>/, '')
+    .replace(/<input[^>]*type="file"[^>]*>/, '')
+    .replace(/<\/head>/, '<base href="' + base + '"></head>');
+  preview = preview.replace(/(<body[^>]*?)>/, (m, tag) => {
+    return tag.replace(/style="[^"]*"/, '') + ' style="margin:0;padding:0">';
+  });
+  document.getElementById('newPreviewWrap').style.display = 'block';
+  document.getElementById('newPreviewFrame').srcdoc = preview;
+  scaleNewPreview();
+}
+
+function scaleNewPreview() {
+  const box   = document.getElementById('newPreviewBox');
+  const frame = document.getElementById('newPreviewFrame');
+  const scale = box.clientWidth / 960;
+  frame.style.transform = 'scale(' + scale + ')';
+  box.style.height = Math.round(540 * scale) + 'px';
+}
+window.addEventListener('resize', () => {
+  if (document.getElementById('newPreviewWrap').style.display !== 'none') scaleNewPreview();
+});
+
 // ── SPECS EDITOR ───────────────────────────────────────────────────────
 function renderSpecsEditor(containerId, rows, isNew) {
   const arr = isNew ? newSpecRows : specRows;
   document.getElementById(containerId).innerHTML = arr.map((r, i) => {
     const ref    = isNew ? 'newSpecRows' : 'specRows';
-    const sched  = isNew ? '' : ';schedulePreview()';
+    const sched  = isNew ? ';scheduleNewPreview()' : ';schedulePreview()';
     return `<div class="spec-row">
       <input type="text" value="${eh(r.key)}" placeholder="Property"
         oninput="${ref}[${i}].key=this.value${sched}">
@@ -763,7 +822,10 @@ function extractImgCss(html) {
 function handleNewImgUpload(input) {
   if (!input.files || !input.files[0]) return;
   const reader = new FileReader();
-  reader.onload = e => { document.getElementById('nfImgSrc').value = e.target.result; };
+  reader.onload = e => {
+    document.getElementById('nfImgSrc').value = e.target.result;
+    scheduleNewPreview();
+  };
   reader.readAsDataURL(input.files[0]);
 }
 

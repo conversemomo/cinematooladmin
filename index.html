@@ -638,7 +638,8 @@ function rebuildProposal() {
   const slides  = [];
 
   // ── Helpers ──────────────────────────────────────────────────────────────
-  const push = (path, label) => slides.push({ path, label });
+  // path = HTML file for thumbnail; pdfPath = original JPEG for PDF export
+  const push = (path, label, pdfPath) => slides.push({ path, label, pdfPath: pdfPath || path });
 
   // Map structural key + index to brand-specific HTML slide path
   const STRUCT_HTML = {
@@ -665,11 +666,11 @@ function rebuildProposal() {
 
   const pushGroup = (key) =>
     (struct[key] || []).forEach((s, idx) =>
-      push(introHtml(key, idx) || s.path, s.title || key));
+      push(introHtml(key, idx) || s.path, s.title || key, s.path));
 
   const pushStructSlide = (key, index) => {
     const s = (struct[key] || [])[index];
-    if (s) push(introHtml(key, index) || s.path, s.title);
+    if (s) push(introHtml(key, index) || s.path, s.title, s.path);
   };
 
   const hasSelected = (cat) =>
@@ -678,7 +679,7 @@ function rebuildProposal() {
   const addProducts = (cat) =>
     DATA.products
       .filter(p => p.brand === activeBrand && p.category === cat && selectedProductIds.has(p.id))
-      .forEach(prod => push(prodHtml(prod.id) || prod.slides[0], prod.model));
+      .forEach(prod => push(prodHtml(prod.id) || prod.slides[0], prod.model, prod.slides[0]));
 
   const pushSectionHeader = (key) => {
     const h = struct.sectionHeaders?.[key];
@@ -737,7 +738,7 @@ function rebuildProposal() {
 
   // ── 13. Closing pages — each individually, in deck order ─────────────────
   (struct.closing || []).forEach((slide, i) => {
-    if (structuralState[`closing_${i}`]) push(introHtml('closing', i) || slide.path, slide.title);
+    if (structuralState[`closing_${i}`]) push(introHtml('closing', i) || slide.path, slide.title, slide.path);
   });
 
   proposalSlides = slides;
@@ -771,7 +772,7 @@ function renderProposal() {
     <div class="proposal-slide" draggable="true"
          ondragstart="dragStart(event,${i})" ondragover="dragOver(event)" ondrop="drop(event,${i})">
       <div class="slide-thumb">
-        <iframe src="${s.path}" scrolling="no" tabindex="-1"></iframe>
+        <iframe src="${s.path}" scrolling="no" tabindex="-1" onload="hideSlideOverlay(this)"></iframe>
       </div>
       <span class="slide-seq">${i+1}</span>
       <div class="slide-label">${s.label}</div>
@@ -781,12 +782,27 @@ function renderProposal() {
   scaleSlideIframes();
 }
 
+function hideSlideOverlay(iframe) {
+  try {
+    const doc = iframe.contentDocument;
+    if (!doc || !doc.head) return;
+    const style = doc.createElement('style');
+    style.textContent = '.demo-label, .edit-controls, #layoutPanel, input[type="file"] { display: none !important; }';
+    doc.head.appendChild(style);
+  } catch(e) {}
+  // Rescale after content loads
+  const card = iframe.closest('.proposal-slide');
+  if (card) {
+    const scale = Math.min(card.clientWidth / 960, card.clientHeight / 540);
+    iframe.style.transform = 'scale(' + scale + ')';
+  }
+}
+
 function scaleSlideIframes() {
   setTimeout(() => {
     document.querySelectorAll('.proposal-slide').forEach(card => {
       const iframe = card.querySelector('.slide-thumb iframe');
       if (!iframe) return;
-      // Use min of both scales so the full 960×540 slide fits without cutting
       const scale = Math.min(card.clientWidth / 960, card.clientHeight / 540);
       iframe.style.transform = 'scale(' + scale + ')';
     });
@@ -867,14 +883,17 @@ function compressSlideImage(url) {
 }
 
 // ── Build a PDF from pre-fetched slide data ───────────────────────────────────
+// Page size: 720 × 405 PDF points = 10in × 5.625in (matches 960×540 at 96dpi)
+const PDF_PAGE_W = 720;
+const PDF_PAGE_H = 405;
 async function buildPDF(slideData) {
   const { PDFDocument } = PDFLib;
   const pdfDoc = await PDFDocument.create();
-  for (const { buf, w, h, isJpeg } of slideData) {
+  for (const { buf, isJpeg } of slideData) {
     if (!buf) continue;
     const img  = isJpeg ? await pdfDoc.embedJpg(buf) : await pdfDoc.embedPng(buf);
-    const page = pdfDoc.addPage([w, h]);
-    page.drawImage(img, { x: 0, y: 0, width: w, height: h });
+    const page = pdfDoc.addPage([PDF_PAGE_W, PDF_PAGE_H]);
+    page.drawImage(img, { x: 0, y: 0, width: PDF_PAGE_W, height: PDF_PAGE_H });
   }
   return pdfDoc.save();
 }
@@ -898,7 +917,7 @@ async function exportPDF() {
     const rawData = [];
     for (let i = 0; i < proposalSlides.length; i++) {
       msg.textContent = `Loading slide ${i + 1} of ${proposalSlides.length}…`;
-      const result = await fetchSlideRaw(proposalSlides[i].path);
+      const result = await fetchSlideRaw(proposalSlides[i].pdfPath);
       rawData.push(result ? { ...result, isJpeg: true } : null);
     }
 
@@ -918,7 +937,7 @@ async function exportPDF() {
     const compData = [];
     for (let i = 0; i < proposalSlides.length; i++) {
       msg.textContent = `Compressing slide ${i + 1} of ${proposalSlides.length}…`;
-      const result = await compressSlideImage(proposalSlides[i].path);
+      const result = await compressSlideImage(proposalSlides[i].pdfPath);
       compData.push(result ? { ...result, isJpeg: true } : null);
     }
 
