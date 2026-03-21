@@ -262,7 +262,7 @@
   }
   .proposal-slide:hover { border-color: var(--signal-wave); box-shadow: 0 4px 14px rgba(66,140,175,0.2); }
   .slide-thumb { position: absolute; inset: 0; overflow: hidden; pointer-events: none; background: #111; }
-  .slide-thumb iframe { width: 960px; height: 540px; border: none; display: block; transform-origin: 0 0; pointer-events: none; }
+  .slide-thumb iframe { position: absolute; top: 0; left: 0; width: 960px; height: 540px; border: none; transform-origin: 0 0; pointer-events: none; }
   .slide-label {
     position: absolute;
     bottom: 0; left: 0; right: 0;
@@ -640,12 +640,36 @@ function rebuildProposal() {
   // ── Helpers ──────────────────────────────────────────────────────────────
   const push = (path, label) => slides.push({ path, label });
 
+  // Map structural key + index to brand-specific HTML slide path
+  const STRUCT_HTML = {
+    cover:              ['cover.html'],
+    intro:              ['introduction.html', 'about.html'],
+    audioTech:          ['audio-technology.html'],
+    acousticTreatment:  ['acoustic-treatment-1.html', 'acoustic-treatment-2.html', 'acoustic-treatment-3.html'],
+    projectionTech:     ['projection-technology.html', 'projection-aspect-ratios.html'],
+    projectionSurfaces: ['projection-surfaces.html'],
+    seating:            ['seating.html'],
+    closing:            ['habitech-cinema-design.html', 'design-process.html', 'design-drawings.html', 'unparalleled-expertise.html', 'the-experience.html'],
+  };
+  const introHtml = (key, idx) => {
+    const files = STRUCT_HTML[key] || [];
+    return files[idx] ? `products/${prefix}/intro/${files[idx]}` : null;
+  };
+
+  // Derive HTML slide path from product id (e.g. "mk-lcr750c" → "products/mk/lcr750c.html")
+  const prodHtml = (id) => {
+    const dash = id.indexOf('-');
+    if (dash < 0) return null;
+    return `products/${id.substring(0, dash)}/${id.substring(dash + 1)}.html`;
+  };
+
   const pushGroup = (key) =>
-    (struct[key] || []).forEach(s => push(s.path, s.title || key));
+    (struct[key] || []).forEach((s, idx) =>
+      push(introHtml(key, idx) || s.path, s.title || key));
 
   const pushStructSlide = (key, index) => {
     const s = (struct[key] || [])[index];
-    if (s) push(s.path, s.title);
+    if (s) push(introHtml(key, index) || s.path, s.title);
   };
 
   const hasSelected = (cat) =>
@@ -654,7 +678,7 @@ function rebuildProposal() {
   const addProducts = (cat) =>
     DATA.products
       .filter(p => p.brand === activeBrand && p.category === cat && selectedProductIds.has(p.id))
-      .forEach(prod => prod.slides.forEach(s => push(s, prod.model)));
+      .forEach(prod => push(prodHtml(prod.id) || prod.slides[0], prod.model));
 
   const pushSectionHeader = (key) => {
     const h = struct.sectionHeaders?.[key];
@@ -713,7 +737,7 @@ function rebuildProposal() {
 
   // ── 13. Closing pages — each individually, in deck order ─────────────────
   (struct.closing || []).forEach((slide, i) => {
-    if (structuralState[`closing_${i}`]) push(slide.path, slide.title);
+    if (structuralState[`closing_${i}`]) push(introHtml('closing', i) || slide.path, slide.title);
   });
 
   proposalSlides = slides;
@@ -758,14 +782,15 @@ function renderProposal() {
 }
 
 function scaleSlideIframes() {
-  requestAnimationFrame(() => {
+  setTimeout(() => {
     document.querySelectorAll('.proposal-slide').forEach(card => {
       const iframe = card.querySelector('.slide-thumb iframe');
       if (!iframe) return;
-      const scale = card.clientWidth / 960;
+      // Use min of both scales so the full 960×540 slide fits without cutting
+      const scale = Math.min(card.clientWidth / 960, card.clientHeight / 540);
       iframe.style.transform = 'scale(' + scale + ')';
     });
-  });
+  }, 50);
 }
 window.addEventListener('resize', scaleSlideIframes);
 
