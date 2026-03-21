@@ -40,11 +40,11 @@
     position: fixed; pointer-events: none; z-index: 9999;
     width: 320px; height: 180px; overflow: hidden;
     border-radius: 6px; box-shadow: 0 8px 32px rgba(0,0,0,0.7);
-    border: 1px solid #333; opacity: 0;
-    transition: opacity 0.15s; background: #000;
-    display: none;
+    border: 1px solid #333; opacity: 0; visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s; background: #000;
+    left: -9999px; top: 0;
   }
-  #slide-preview.visible { opacity: 1; display: block; }
+  #slide-preview.visible { opacity: 1; visibility: visible; }
   #slide-preview iframe {
     width: 960px; height: 540px; border: none;
     transform: scale(0.3333); transform-origin: 0 0;

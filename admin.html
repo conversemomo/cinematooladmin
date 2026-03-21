@@ -68,13 +68,22 @@ header { background: var(--night); height: 52px; display: flex; align-items: cen
 .fr { display: flex; flex-direction: column; gap: 4px; }
 .fr.full { grid-column: 1 / -1; }
 label { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
-input[type=text], textarea, select {
+input[type=text], input[type=number], textarea, select {
   padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 4px;
   font-size: 13px; font-family: 'Karla', sans-serif; color: var(--night);
   outline: none; width: 100%;
 }
-input[type=text]:focus, textarea:focus, select:focus {
+input[type=text]:focus, input[type=number]:focus, textarea:focus, select:focus {
   border-color: var(--blue); box-shadow: 0 0 0 3px rgba(66,140,175,0.1);
+}
+input[type=file] {
+  padding: 6px 10px; border: 1.5px solid var(--border); border-radius: 4px;
+  font-size: 12px; font-family: 'Karla', sans-serif; color: var(--muted);
+  width: 100%; cursor: pointer; background: var(--bg);
+}
+.img-preview-thumb {
+  width: 80px; height: 50px; object-fit: contain; border: 1px solid var(--border);
+  border-radius: 3px; background: #222; flex-shrink: 0;
 }
 textarea { resize: vertical; }
 
@@ -195,6 +204,39 @@ textarea { resize: vertical; }
           <div class="fr full">
             <label>Bullet Points <span style="font-weight:400;text-transform:none;letter-spacing:0">(one per line)</span></label>
             <textarea id="fBullets" rows="5" oninput="schedulePreview()"></textarea>
+          </div>
+        </div>
+
+        <div class="sec-hdr" style="margin-top:4px">
+          <span class="sec-lbl">Product Image</span>
+        </div>
+        <div class="fg" style="margin-bottom:14px">
+          <div class="fr full" style="flex-direction:row;align-items:center;gap:10px">
+            <img id="imgThumb" class="img-preview-thumb" src="" alt="" style="display:none">
+            <div style="flex:1;display:flex;flex-direction:column;gap:6px">
+              <label>Image URL or Upload</label>
+              <input type="text" id="fImgSrc" placeholder="../../assets/mk/image.png" oninput="onImgSrcChange()">
+            </div>
+          </div>
+          <div class="fr full">
+            <label>Upload New Image <span style="font-weight:400;text-transform:none;letter-spacing:0">(embeds as base64 — no external file needed)</span></label>
+            <input type="file" id="fImgFile" accept="image/*" onchange="handleImgUpload(this)">
+          </div>
+          <div class="fr">
+            <label>Left (px)</label>
+            <input type="number" id="fImgLeft" placeholder="110" oninput="schedulePreview()">
+          </div>
+          <div class="fr">
+            <label>Top (px)</label>
+            <input type="number" id="fImgTop" placeholder="297" oninput="schedulePreview()">
+          </div>
+          <div class="fr">
+            <label>Width (px)</label>
+            <input type="number" id="fImgWidth" placeholder="190" oninput="schedulePreview()">
+          </div>
+          <div class="fr">
+            <label>Height (px)</label>
+            <input type="number" id="fImgHeight" placeholder="87" oninput="schedulePreview()">
           </div>
         </div>
 
@@ -404,6 +446,18 @@ async function selectProduct(path, label, filename, mfr) {
       .map(s => s.textContent.trim()).filter(Boolean);
     document.getElementById('fBullets').value = bullets.join('\n');
 
+    // Product image
+    const imgEl  = doc.getElementById('productImg');
+    const imgSrc = imgEl ? (imgEl.getAttribute('src') || '') : '';
+    document.getElementById('fImgSrc').value = imgSrc;
+    document.getElementById('fImgFile').value = '';
+    const css = extractImgCss(html);
+    document.getElementById('fImgLeft').value   = css.left   || '';
+    document.getElementById('fImgTop').value    = css.top    || '';
+    document.getElementById('fImgWidth').value  = css.width  || '';
+    document.getElementById('fImgHeight').value = css.height || '';
+    updateImgThumb(imgSrc, r.url);
+
     specRows = [...doc.querySelectorAll('.specs-table tr')].map(tr => {
       const tds = [...tr.querySelectorAll('td[contenteditable]')];
       return { key: tds[0]?.textContent.trim() || '', val: tds[1]?.textContent.trim() || '' };
@@ -558,6 +612,33 @@ function applyForm(html, isNew, ov) {
     .join('\n');
   out = out.replace(/(<table[^>]*id="specsTable"[^>]*>)[\s\S]*?(<\/table>)/,
     '$1\n' + trHtml + '\n  $2');
+
+  // Product image src
+  if (!isNew) {
+    const imgSrc = document.getElementById('fImgSrc').value.trim();
+    if (imgSrc) {
+      // id before src  e.g. id="productImg" ... src="..."
+      out = out.replace(/(id="productImg"[^>]*\bsrc=")[^"]*(")/,   '$1' + imgSrc + '$2');
+      // src before id  e.g. src="..." ... id="productImg"
+      out = out.replace(/(<img\b[^>]*\bsrc=")([^"]*)("[^>]*\bid="productImg")/,
+        '$1' + imgSrc + '$3');
+    }
+    // Product image CSS position/size
+    const left   = document.getElementById('fImgLeft').value.trim();
+    const top    = document.getElementById('fImgTop').value.trim();
+    const width  = document.getElementById('fImgWidth').value.trim();
+    const height = document.getElementById('fImgHeight').value.trim();
+    if (left || top || width || height) {
+      out = out.replace(/(\.product-image\s*\{)([^}]*)(\})/, (m, open, inner, close) => {
+        if (left)   inner = inner.replace(/\bleft:\s*[^;]+/, 'left: ' + left + 'px');
+        if (top)    inner = inner.replace(/\btop:\s*[^;]+/,  'top: '  + top  + 'px');
+        if (width)  inner = inner.replace(/\bwidth:\s*[^;]+/,'width: '+ width + 'px');
+        if (height) inner = inner.replace(/\bheight:\s*[^;]+/,'height: '+ height + 'px');
+        return open + inner + close;
+      });
+    }
+  }
+
   return out;
 }
 
@@ -632,6 +713,51 @@ function downloadHTML(html, filename) {
   document.body.appendChild(a); a.click();
   document.body.removeChild(a);
   setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// ── IMAGE HELPERS ──────────────────────────────────────────────────────
+function extractImgCss(html) {
+  const m = html.match(/\.product-image\s*\{([^}]*)\}/);
+  if (!m) return {};
+  const block = m[1];
+  return {
+    left:   (block.match(/\bleft:\s*([\d.-]+)px/)   || [])[1] || '',
+    top:    (block.match(/\btop:\s*([\d.-]+)px/)    || [])[1] || '',
+    width:  (block.match(/\bwidth:\s*([\d.-]+)px/)  || [])[1] || '',
+    height: (block.match(/\bheight:\s*([\d.-]+)px/) || [])[1] || '',
+  };
+}
+
+function handleImgUpload(input) {
+  if (!input.files || !input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    document.getElementById('fImgSrc').value = e.target.result; // base64 data URL
+    updateImgThumb(e.target.result, null);
+    schedulePreview();
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function onImgSrcChange() {
+  updateImgThumb(document.getElementById('fImgSrc').value.trim(), current.path);
+  schedulePreview();
+}
+
+function updateImgThumb(src, basePath) {
+  const thumb = document.getElementById('imgThumb');
+  if (!src) { thumb.style.display = 'none'; return; }
+  if (src.startsWith('data:')) {
+    thumb.src = src;
+  } else if (basePath) {
+    // resolve relative src against the slide's directory
+    const dir = basePath.substring(0, basePath.lastIndexOf('/') + 1);
+    thumb.src = new URL(src, new URL(dir, window.location.href)).href;
+  } else {
+    thumb.src = src;
+  }
+  thumb.style.display = 'block';
+  thumb.onerror = () => { thumb.style.display = 'none'; };
 }
 
 // ── HELPERS ────────────────────────────────────────────────────────────
