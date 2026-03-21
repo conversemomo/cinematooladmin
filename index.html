@@ -7,7 +7,6 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Karla:wght@300;400;500;700;800&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"></script>
 <style>
   :root {
     /* ── Habitech Brand Colours ── */
@@ -838,69 +837,34 @@ function clearProposal() {
   }
 }
 
-// ─── PDF SIZE LIMIT ───────────────────────────────────────────────────────────
-const PDF_SIZE_LIMIT = 13 * 1024 * 1024; // 13 MB in bytes
+// ─── PDF EXPORT — native browser print (perfect quality, matches HTML view) ────
+// Fetches each slide HTML, extracts the .slide element + its styles, makes all
+// asset URLs absolute, then assembles a single print-ready document and opens
+// it in a new window where window.print() is auto-called.
+// The browser renders everything natively — fonts, images, CSS — at full fidelity.
 
-// ── Fetch a slide as raw bytes (no re-encoding — full quality) ────────────────
-async function fetchSlideRaw(url) {
-  const resp = await fetch(url);
-  if (!resp.ok) return null;
-  const buf = await resp.arrayBuffer();
-  // Detect width/height via a temporary Image so we can size the PDF page
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.onload  = () => resolve({ buf, w: img.naturalWidth, h: img.naturalHeight });
-    img.onerror = () => resolve(null);
-    img.src = url;
-  });
+// Rewrite url() references inside CSS text to absolute URLs
+function absUrlInCss(css, base) {
+  return css.replace(/url\(\s*(['"]?)(?!https?:|data:|#)([^'")\s]+)\1\s*\)/g,
+    (m, q, path) => {
+      try { return 'url("' + new URL(path, base).href + '")'; }
+      catch(e) { return m; }
+    });
 }
 
-// ── Re-encode a slide at reduced quality (only used if PDF exceeds 13 MB) ─────
-const PDF_COMPRESS_WIDTH = 1440;
-const PDF_COMPRESS_QUAL  = 0.82;
-
-function compressSlideImage(url) {
-  return new Promise((resolve) => {
-    const img = new Image();
-    img.crossOrigin = "anonymous";
-    img.onload = () => {
-      let w = img.naturalWidth, h = img.naturalHeight;
-      if (w > PDF_COMPRESS_WIDTH) {
-        h = Math.round(h * PDF_COMPRESS_WIDTH / w);
-        w = PDF_COMPRESS_WIDTH;
-      }
-      const canvas = document.createElement("canvas");
-      canvas.width = w; canvas.height = h;
-      canvas.getContext("2d").drawImage(img, 0, 0, w, h);
-      canvas.toBlob(
-        (blob) => blob ? blob.arrayBuffer().then(buf => resolve({ buf, w, h })) : resolve(null),
-        "image/jpeg", PDF_COMPRESS_QUAL
-      );
-    };
-    img.onerror = () => resolve(null);
-    img.src = url;
-  });
+// Rewrite src/href attributes in HTML text to absolute URLs
+function absUrlInHtml(html, base) {
+  return html
+    .replace(/\b(src|href)="(?!https?:|data:|#|javascript:)([^"]+)"/g, (m, attr, path) => {
+      try { return attr + '="' + new URL(path, base).href + '"'; }
+      catch(e) { return m; }
+    })
+    .replace(/url\(\s*(['"]?)(?!https?:|data:|#)([^'")\s]+)\1\s*\)/g, (m, q, path) => {
+      try { return 'url("' + new URL(path, base).href + '")'; }
+      catch(e) { return m; }
+    });
 }
 
-// ── Build a PDF from pre-fetched slide data ───────────────────────────────────
-// Page size: 720 × 405 PDF points = 10in × 5.625in (matches 960×540 at 96dpi)
-const PDF_PAGE_W = 720;
-const PDF_PAGE_H = 405;
-async function buildPDF(slideData) {
-  const { PDFDocument } = PDFLib;
-  const pdfDoc = await PDFDocument.create();
-  for (const { buf, isJpeg } of slideData) {
-    if (!buf) continue;
-    const img  = isJpeg ? await pdfDoc.embedJpg(buf) : await pdfDoc.embedPng(buf);
-    const page = pdfDoc.addPage([PDF_PAGE_W, PDF_PAGE_H]);
-    page.drawImage(img, { x: 0, y: 0, width: PDF_PAGE_W, height: PDF_PAGE_H });
-  }
-  return pdfDoc.save();
-}
-
-// ─── EXPORT PDF — smart size check ────────────────────────────────────────────
-// Pass 1: embed slides at full quality → if ≤ 13 MB, done.
-// Pass 2: only if over 13 MB → re-encode at reduced quality and rebuild.
 async function exportPDF() {
   if (!proposalSlides.length) return;
 
@@ -909,57 +873,111 @@ async function exportPDF() {
   overlay.classList.add("show");
 
   try {
-    const brandSlug = (activeBrand || "Proposal").replace(/[^a-zA-Z0-9]/g, "_");
-    const filename  = `Cinema_Proposal_${brandSlug}_${yyyymmdd()}.pdf`;
+    // ── Fetch and extract each slide ───────────────────────────────────────
+    const pages = [];
+    const seenFontHrefs = new Set();
+    const seenCssBlocks = new Set();
+    const fontLinkTags  = [];
+    const cssBlocks     = [];
 
-    // ── Pass 1: full quality ────────────────────────────────────────────────
-    msg.textContent = "Loading slides…";
-    const rawData = [];
     for (let i = 0; i < proposalSlides.length; i++) {
       msg.textContent = `Loading slide ${i + 1} of ${proposalSlides.length}…`;
-      const result = await fetchSlideRaw(proposalSlides[i].pdfPath);
-      rawData.push(result ? { ...result, isJpeg: true } : null);
+      const path = proposalSlides[i].path;
+
+      const resp = await fetch(path + '?t=' + Date.now());
+      if (!resp.ok) { console.warn('Skipping (fetch failed):', path); continue; }
+      const rawHtml = await resp.text();
+
+      // Absolute base for this slide's assets
+      const absUrl = new URL(path, window.location.href).href;
+      const dir    = absUrl.substring(0, absUrl.lastIndexOf('/') + 1);
+
+      const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
+
+      // Collect Google Fonts / external stylesheet links (deduplicated)
+      doc.querySelectorAll('link[rel="stylesheet"]').forEach(l => {
+        const href = l.getAttribute('href') || '';
+        if (!seenFontHrefs.has(href)) {
+          seenFontHrefs.add(href);
+          fontLinkTags.push(`<link rel="stylesheet" href="${href}">`);
+        }
+      });
+
+      // Collect <style> blocks, make url() paths absolute (deduplicated by content)
+      doc.querySelectorAll('style').forEach(s => {
+        const css = absUrlInCss(s.textContent, dir);
+        if (!seenCssBlocks.has(css)) { seenCssBlocks.add(css); cssBlocks.push(css); }
+      });
+
+      // Extract the .slide element and absolutise its asset references
+      const slideEl = doc.querySelector('.slide');
+      if (!slideEl) { console.warn('No .slide found in', path); continue; }
+
+      // Carry the slide's own background-color as an inline style so it
+      // is never overridden by another slide's CSS rule
+      const computedBg = slideEl.style.background || slideEl.style.backgroundColor || '';
+      if (!computedBg) {
+        // Extract from the slide's own <style> block
+        const bgMatch = rawHtml.match(/\.slide\s*\{[^}]*background(?:-color)?\s*:\s*([^;}\n]+)/);
+        if (bgMatch) slideEl.style.backgroundColor = bgMatch[1].trim();
+      }
+
+      pages.push(absUrlInHtml(slideEl.outerHTML, dir));
     }
 
-    msg.textContent = "Building PDF…";
-    const fullBytes = await buildPDF(rawData.filter(Boolean));
-    const fullSize  = fullBytes.byteLength;
+    if (!pages.length) throw new Error('No slides could be loaded.');
 
-    if (fullSize <= PDF_SIZE_LIMIT) {
-      // ✅ Under 13 MB — download as-is, no compression needed
-      msg.textContent = `PDF is ${(fullSize / 1024 / 1024).toFixed(1)} MB — saving…`;
-      downloadPDF(fullBytes, filename);
-      return;
-    }
+    msg.textContent = 'Opening print window…';
 
-    // ── Pass 2: over 13 MB — compress and rebuild ───────────────────────────
-    msg.textContent = `PDF is ${(fullSize / 1024 / 1024).toFixed(1)} MB — compressing…`;
-    const compData = [];
-    for (let i = 0; i < proposalSlides.length; i++) {
-      msg.textContent = `Compressing slide ${i + 1} of ${proposalSlides.length}…`;
-      const result = await compressSlideImage(proposalSlides[i].pdfPath);
-      compData.push(result ? { ...result, isJpeg: true } : null);
-    }
+    // ── Build the print document ────────────────────────────────────────────
+    const printHtml = `<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+${fontLinkTags.join('\n')}
+<style>
+${cssBlocks.join('\n')}
+@page { size: 960px 540px; margin: 0; }
+html, body { margin: 0; padding: 0; background: #000; }
+.slide { page-break-after: always; page-break-inside: avoid; display: block !important; }
+.slide:last-of-type { page-break-after: avoid; }
+/* strip any editor UI that wasn't cleaned from the HTML */
+.demo-label, .edit-controls, #layoutPanel, input[type="file"],
+.bullet-del, .row-del { display: none !important; }
+[contenteditable] { outline: none; }
+</style>
+</head>
+<body>
+${pages.join('\n')}
+<script>
+// Auto-print once fonts + images are ready
+window.addEventListener('load', function() {
+  var imgs = document.images;
+  var pending = imgs.length;
+  function tryPrint() { if (--pending <= 0) setTimeout(function(){ window.print(); }, 800); }
+  if (!pending) { setTimeout(function(){ window.print(); }, 1200); return; }
+  for (var i = 0; i < imgs.length; i++) {
+    if (imgs[i].complete) { tryPrint(); }
+    else { imgs[i].addEventListener('load', tryPrint); imgs[i].addEventListener('error', tryPrint); }
+  }
+});
+<\/script>
+</body>
+</html>`;
 
-    msg.textContent = "Rebuilding PDF…";
-    const compBytes = await buildPDF(compData.filter(Boolean));
-    msg.textContent = `Compressed to ${(compBytes.byteLength / 1024 / 1024).toFixed(1)} MB — saving…`;
-    downloadPDF(compBytes, filename);
+    // ── Open print window ───────────────────────────────────────────────────
+    const win = window.open('', '_blank', 'width=980,height=600');
+    if (!win) throw new Error('Pop-up blocked — please allow pop-ups for this page and try again.');
+    win.document.open();
+    win.document.write(printHtml);
+    win.document.close();
 
   } catch (err) {
-    alert("PDF export failed: " + err.message);
+    alert('PDF export failed: ' + err.message);
     console.error(err);
   } finally {
     overlay.classList.remove("show");
   }
-}
-
-function downloadPDF(bytes, filename) {
-  const blob = new Blob([bytes], { type: "application/pdf" });
-  const url  = URL.createObjectURL(blob);
-  const a    = document.createElement("a");
-  a.href = url; a.download = filename; a.click();
-  URL.revokeObjectURL(url);
 }
 
 function yyyymmdd() {
