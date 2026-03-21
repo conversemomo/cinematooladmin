@@ -1,0 +1,1735 @@
+[
+  {
+    "model": "LCR750C",
+    "category": "Front Speakers",
+    "features": [
+      "THX Select certified for rooms up to 56.63m3 / 2,000ft3.",
+      "2 x 5.25“ Woofers built with aluminium distortion killer rings for reduced distortion",
+      "Convenient bookshelf sized speakers",
+      "Contemporary visual appeal with no sacrifice to audio performance",
+      "Danish designed high-performance tweeters",
+      "Extra stiff coated fibre glass cone",
+      "Phase focused crossover designs",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome"
+      ],
+      [
+        "Woofer",
+        "2 x 5.25” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "90dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "178 x 408 x 223 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image9.png",
+    "slide_idx": 7,
+    "slug": "lcr750c",
+    "filename": "lcr750c.html"
+  },
+  {
+    "model": "IC95",
+    "category": "Atmos Speakers",
+    "features": [
+      "In-ceiling speaker",
+      "Proven proprietary 6.5” mid woofer also used in the IW95 in wall speaker",
+      "1” soft fabric dome tweeter with swivel function",
+      "Smooth and discrete finish and exceptionally easy installation",
+      "Open backed or additional back can available separately",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "Without Back Can: 50Hz to 20kHzWith Back Can: 70Hz to 20kHz"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1” coated silk dome with swivel function"
+      ],
+      [
+        "Woofer",
+        "6.5” mineral filled polypropylene"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 300W"
+      ],
+      [
+        "Sensitivity",
+        "90dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions (Diameter x D)",
+        "Cut Out Diameter: 218mmSpeaker Outside Diameter: 245mmGrille Outside Diameter: 248mm / 9.74“Depth Without Optional Can: 98mmDepth With Optional Can: 212mm"
+      ]
+    ],
+    "image_file": "image10.png",
+    "slide_idx": 8,
+    "slug": "ic95",
+    "filename": "ic95.html"
+  },
+  {
+    "model": "M50",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "Décor friendly on wall design",
+      "Ultra slim, low profile and unobtrusive enclosure",
+      "True voice match within the M Series",
+      "A richly detailed and dynamic sound that defines every M&K Sound's loudspeaker",
+      "Included mounting accessories to provide an exceptionally easy installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "100Hz to 20kHz (Average response in room +/- 2dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 4.9Ω)"
+      ],
+      [
+        "Tweeter",
+        "Shielded 1” coated silk dome and neodymium magnet"
+      ],
+      [
+        "Woofer",
+        "Shielded 4” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 125W"
+      ],
+      [
+        "Sensitivity",
+        "85dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "250 x 130 x 85 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image11.png",
+    "slide_idx": 9,
+    "slug": "m50",
+    "filename": "m50.html"
+  },
+  {
+    "model": "D85",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "Compact enclosure",
+      "Subtly elegant and room friendly package",
+      "Phase focused crossover designs",
+      "A richly detailed and dynamic sound that defines every M&K Sound's loudspeaker",
+      "Numerous placement options providing a simple and exceptionally easy installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "95Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome, low compression"
+      ],
+      [
+        "Woofer",
+        "5.25” polypropylene cone with inverted dust cap"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "89dB (Average SPL 2.83V / 1m on axis 200 to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "245 x 195 x 95 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image12.png",
+    "slide_idx": 10,
+    "slug": "d85",
+    "filename": "d85.html"
+  },
+  {
+    "model": "D95",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "Compact enclosure",
+      "Subtly elegant and room friendly package",
+      "Phase focused crossover designs",
+      "A richly detailed and dynamic sound that defines every M&K Sound's loudspeaker",
+      "Numerous placement options providing a simple and exceptionally easy installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "90Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome, low compression"
+      ],
+      [
+        "Woofer",
+        "6.5” polypropylene cone with inverted dust cap"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 300W"
+      ],
+      [
+        "Sensitivity",
+        "91dB (Average SPL 2.83V / 1m on axis 200 to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "300 x 240 x 95 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image13.png",
+    "slide_idx": 11,
+    "slug": "d95",
+    "filename": "d95.html"
+  },
+  {
+    "model": "MP950",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "On wall speaker",
+      "Contemporary visual appeal with no sacrifice to audio performance",
+      "Exclusive M&K Sound's Phase Focused crossover",
+      "Provides an excellent on and off axis response",
+      "Integrated bracket for wall mounting",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome"
+      ],
+      [
+        "Woofer",
+        "2 x 5.25” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "90dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "500 x 175 x 100 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image14.png",
+    "slide_idx": 12,
+    "slug": "mp950",
+    "filename": "mp950.html"
+  },
+  {
+    "model": "MP150",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "On wall speaker",
+      "New Danish designed high performance tweeters",
+      "Created using the technologies and innovations from the newly redesigned S300",
+      "Linear damping for strict system control even at high sound pressure levels",
+      "High power handling",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "77Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "3 x 1.1” coated silk dome, low compression"
+      ],
+      [
+        "Woofer",
+        "2 x 5.25” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 400W"
+      ],
+      [
+        "Sensitivity",
+        "91dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "308 x 267 x 165/128 (H x W x D Top / Bottom mm)"
+      ]
+    ],
+    "image_file": "image15.png",
+    "slide_idx": 13,
+    "slug": "mp150",
+    "filename": "mp150.html"
+  },
+  {
+    "model": "MP300",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "On wall speaker",
+      "Designed, built and tested in Denmark",
+      "One piece heavy duty cast aluminum triple tweeter array plate",
+      "Resonance damped tweeter magnet system for precise transient control",
+      "Has the power to fill large spaces",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 22kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.6Ω)"
+      ],
+      [
+        "Tweeter",
+        "Shielded 3 x 1.” high excursion, soft dome, low compression"
+      ],
+      [
+        "Woofer",
+        "2 x 6.5” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 500W"
+      ],
+      [
+        "Sensitivity",
+        "92dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "395 x 340 x 160/120 (H x W x D Top / Bottom mm)"
+      ]
+    ],
+    "image_file": "image16.png",
+    "slide_idx": 14,
+    "slug": "mp300",
+    "filename": "mp300.html"
+  },
+  {
+    "model": "IW5",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "Compact on wall or in ceiling speaker",
+      "Round white paintable grille",
+      "Phase focused crossover",
+      "Superb on and off axis coverage",
+      "Easy, fast, accurate and safe installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "100Hz to 20kHz (Average response in room +/- 2 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.6Ω)"
+      ],
+      [
+        "Tweeter",
+        "Shielded 1\" coated silk dome, neodymium magnet"
+      ],
+      [
+        "Woofer",
+        "Shielded 4” polymer coated texture paper"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 125W"
+      ],
+      [
+        "Sensitivity",
+        "84dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "Cabinet: 185 x 144 x 99 (H x W x D mm)Grille Diameter: 224mmCut Out: 164 x 124 (H x W mm)"
+      ]
+    ],
+    "image_file": "image17.png",
+    "slide_idx": 15,
+    "slug": "iw5",
+    "filename": "iw5.html"
+  },
+  {
+    "model": "IW85",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "In wall speaker",
+      "Timber matched and for use with any of M&K Sound’s speakers",
+      "Phase focused crossover",
+      "Superb in two channel or surround applications",
+      "Easy, fast, accurate and safe installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "85Hz to 20kHz (Average response in room +/- 2 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome, low compression"
+      ],
+      [
+        "Woofer",
+        "1 x 5.25” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "88dB (Average SPL 2.83V / 1m on axis 200 to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "Cabinet: 264 x 152 x 93 (H x W x D mm)Grille: 270 x 175 (H x W mm)Cut Out: 239 x 152 (H x W mm)"
+      ]
+    ],
+    "image_file": "image18.png",
+    "slide_idx": 16,
+    "slug": "iw85",
+    "filename": "iw85.html"
+  },
+  {
+    "model": "IW95",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "In wall ceiling speaker",
+      "Timber matched and for use with any of M&K Sound’s speakers",
+      "Phase focused crossover",
+      "Superb in two channel or surround applications",
+      "Easy, fast, accurate and safe installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 2 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome, low compression"
+      ],
+      [
+        "Woofer",
+        "1 x 6.5” mineral filled polypropylene"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 300W"
+      ],
+      [
+        "Sensitivity",
+        "91dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "Cabinet: 309 x 232 x 93 (H x W x D mm)Grille: 315 x 237 (H x W mm)Cut Out: 273 x 189 (H x W mm)"
+      ]
+    ],
+    "image_file": "image19.png",
+    "slide_idx": 17,
+    "slug": "iw95",
+    "filename": "iw95.html"
+  },
+  {
+    "model": "IW950",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "In wall speaker",
+      "Timber matched and for use with any of M&K Sound’s speakers",
+      "Phase focused crossover",
+      "Superb in two channel or surround applications",
+      "Easy, fast, accurate and safe installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome"
+      ],
+      [
+        "Woofer",
+        "2 x 5.25” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 400W"
+      ],
+      [
+        "Sensitivity",
+        "90dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "Cabinet: 465 x 210 x 95 (H x W x D mm)Grille: 496 x 240 (H x W mm)Cut Out: 467 x 212 (H x W mm)"
+      ]
+    ],
+    "image_file": "image20.png",
+    "slide_idx": 18,
+    "slug": "iw950",
+    "filename": "iw950.html"
+  },
+  {
+    "model": "IW150",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "In wall speaker",
+      "Identical drivers and technologies used in the original satellite models",
+      "Solid steel font bafﬂes to reinforce the wall and help prevent rattles and buzz",
+      "Paintable grille",
+      "Easy, fast, accurate and safe installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "3 x 1.1” coated silk dome, low compression"
+      ],
+      [
+        "Woofer",
+        "2 x 5.25” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 400W"
+      ],
+      [
+        "Sensitivity",
+        "90dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "Cabinet: 329 x 286 x 93 (H x W x D mm)Grille: 360 x 318 (H x W mm)Cut Out: 331 x 288 (H x W mm)"
+      ]
+    ],
+    "image_file": "image21.png",
+    "slide_idx": 19,
+    "slug": "iw150",
+    "filename": "iw150.html"
+  },
+  {
+    "model": "IW150A",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "In wall / ceiling speaker targeted primarily as a Dolby Atmos friendly speaker",
+      "Identical drivers and technologies used in the original satellite models",
+      "Solid steel font bafﬂes to reinforce the wall and help prevent rattles and buzz",
+      "Paintable grille",
+      "Easy, fast, accurate and safe installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1 x 1.1” coated silk dome, low compression"
+      ],
+      [
+        "Woofer",
+        "2 x 5.25” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 400W"
+      ],
+      [
+        "Sensitivity",
+        "90dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "Cabinet: 329 x 286 x 93 (H x W x D mm)Grille: 360 x 318 (H x W mm)Cut Out: 331 x 288 (H x W mm)"
+      ]
+    ],
+    "image_file": "image22.png",
+    "slide_idx": 20,
+    "slug": "iw150a",
+    "filename": "iw150a.html"
+  },
+  {
+    "model": "IW300",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "In wall / ceiling speaker",
+      "Identical drivers and technologies used in the original satellite models",
+      "Solid steel font bafﬂes to reinforce the wall and help prevent rattles and buzz",
+      "Paintable grille",
+      "Easy, fast, accurate and safe installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "3 x 1” high excursion soft dome, low compression"
+      ],
+      [
+        "Woofer",
+        "2 x 6.5” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 500W"
+      ],
+      [
+        "Sensitivity",
+        "92dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "Cabinet: 399 x 314 x 120 (H x W x D mm)Grille: 430 x 345 (H x W mm)Cut Out: 401 x 316 (H x W mm)"
+      ]
+    ],
+    "image_file": "image23.png",
+    "slide_idx": 21,
+    "slug": "iw300",
+    "filename": "iw300.html"
+  },
+  {
+    "model": "IW500",
+    "category": "Front, Surround, Atmos Speakers",
+    "features": [
+      "THX Certified Dominus status",
+      "Precise on and off axis audio performance for superb imaging",
+      "High performance dome tweeters with precision crafted waveguides for accurate and focused vertical and horizontal dispersion",
+      "Complex crossover network to promote an audible smoothness and non-fatiguing character across the frequency range",
+      "Natural, open and articulate sound field"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 4.6Ω)"
+      ],
+      [
+        "Tweeter",
+        "1 x 1” high excursion soft dome"
+      ],
+      [
+        "Mid-range",
+        "2x 3” coated silk dome with rear chamber"
+      ],
+      [
+        "Woofer",
+        "2 x 8” carbon fibre laminated"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "100 to 500W"
+      ],
+      [
+        "Sensitivity",
+        "92dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "Cabinet: 845 x 314 x 98 (H x W x D mm)Cut Out: 847 x 316 (H x W mm)"
+      ]
+    ],
+    "image_file": "image24.png",
+    "slide_idx": 22,
+    "slug": "iw500",
+    "filename": "iw500.html"
+  },
+  {
+    "model": "M70",
+    "category": "Front, Surround Speakers",
+    "features": [
+      "Ultra Slim, low profile on wall speaker",
+      "Delivering rich details and dynamic sound defining every M&K Sound's loudspeaker",
+      "True voice match within the M Series",
+      "Available in satin black or white finishes",
+      "Mounting accessories are included providing simple and easy installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 2 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.6Ω)"
+      ],
+      [
+        "Tweeter",
+        "Shielded 1” coated silk dome and neodymium magnet"
+      ],
+      [
+        "Woofer",
+        "Shielded 2 x 4” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "89dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "460 x 130 x 88 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image25.png",
+    "slide_idx": 23,
+    "slug": "m70",
+    "filename": "m70.html"
+  },
+  {
+    "model": "M90",
+    "category": "Front, Surround Speakers",
+    "features": [
+      "Ultra Slim, low profile on wall speaker",
+      "Delivering rich details and dynamic sound defining every M&K Sound's loudspeaker",
+      "True voice match within the M Series",
+      "Available in satin black or white finishes",
+      "Mounting accessories are included providing simple and easy installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "70Hz to 20kHz (Average response in room +/- 2 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.6Ω)"
+      ],
+      [
+        "Tweeter",
+        "Shielded 1” coated silk dome and neodymium magnet"
+      ],
+      [
+        "Woofer",
+        "4 x 4” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "89dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "800 x 130 x 85 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image26.png",
+    "slide_idx": 24,
+    "slug": "m90",
+    "filename": "m90.html"
+  },
+  {
+    "model": "LCR750",
+    "category": "Front, Surround Speakers",
+    "features": [
+      "Bookshelf / on wall speaker",
+      "THX Select certified for medium-sized rooms )up to 56.63 cubic M / 2,000 cubic ft).",
+      "2 x 5.25\" woofers built with aluminum distortion killer rings for reduced distortion",
+      "Danish designed high performance tweeters",
+      "Part of the 750 Series for a perfect acoustic match",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome"
+      ],
+      [
+        "Woofer",
+        "2 x 5.25” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "90dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "408 x 178 x 223 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image27.png",
+    "slide_idx": 25,
+    "slug": "lcr750",
+    "filename": "lcr750.html"
+  },
+  {
+    "model": "LCR950",
+    "category": "Front, Surround Speakers",
+    "features": [
+      "Bookshelf / on wall speaker",
+      "THX Select 2 certified for medium-sized rooms (up to 56.63 cubic M / 2,000 cubic ft).",
+      "2 x 5.25\" woofers built with aluminum distortion killer rings for reduced distortion",
+      "Danish designed high performance tweeters",
+      "Part of the 950 Series for a perfect acoustic match",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome"
+      ],
+      [
+        "Woofer",
+        "2 x 5.25” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "90dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "40 x 175 x 188 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image28.png",
+    "slide_idx": 26,
+    "slug": "lcr950",
+    "filename": "lcr950.html"
+  },
+  {
+    "model": "S150",
+    "category": "Front, Surround Speakers",
+    "features": [
+      "Bookshelf /on wall speaker",
+      "THX Ultra2 Certified for larger home theatres, up to 84.95 cubic m3 or 3,000 ft3in size",
+      "28mm vented voice coils provide high power handling and extended linearity",
+      "One piece heavy duty cast aluminum triple tweeter array plate",
+      "Resonance damped tweeter magnet system for precise transient control",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "75Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "3 x 1.1” coated silk dome, low compression"
+      ],
+      [
+        "Woofer",
+        "2 x 5.25” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 500W"
+      ],
+      [
+        "Sensitivity",
+        "92dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "318 x 268 x 308 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image29.png",
+    "slide_idx": 27,
+    "slug": "s150",
+    "filename": "s150.html"
+  },
+  {
+    "model": "S300",
+    "category": "Front, Surround Speakers",
+    "features": [
+      "Bookshelf / on wall speaker",
+      "THX Utra 2 certified for larger rooms (up to 84.95 m3 / 3353.13 cubic ft).",
+      "One piece heavy duty cast aluminum triple tweeter array plate",
+      "Resonance damped tweeter magnet system for precise transient control",
+      "Designed, built and tested in Denmark",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "60Hz to 22kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.2Ω)"
+      ],
+      [
+        "Tweeter",
+        "3 x 1.1” coated silk dome, low compression"
+      ],
+      [
+        "Woofer",
+        "2 x 6.5” coated glass fibre"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 500W"
+      ],
+      [
+        "Sensitivity",
+        "93dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "395 x 340 x 330 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image30.png",
+    "slide_idx": 28,
+    "slug": "s300",
+    "filename": "s300.html"
+  },
+  {
+    "model": "MPS2520P",
+    "category": "Front, Surround Speakers",
+    "features": [
+      "Bookshelf /on wall speaker",
+      "Powered version of the S150 series speaker",
+      "28mm vented voice coils provide high power handling and extended linearity",
+      "One piece heavy duty cast aluminum triple tweeter array plate",
+      "Resonance damped tweeter magnet system for precise transient control",
+      "Integrated waveguide & short horn load for wide dispersion & smooth frequency response"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "12Hz to 20kHz +/- 2dB 80Hz to 12kHz +/- 1dB"
+      ],
+      [
+        "Tweeter",
+        "3 x 1.1” coated silk dome, low compression"
+      ],
+      [
+        "Woofer",
+        "2 x 5.25” coated glass fibre"
+      ],
+      [
+        "Amplifier Power",
+        "Bass Midrange: 200W RMS / 400W peak  High Frequency: 180W RMS / 360W peak"
+      ],
+      [
+        "Total Harmonic distortion:",
+        "0.002% into 4 ohms LF Channel0.03% into 4 ohms HF channel"
+      ],
+      [
+        "AC Power",
+        "115VAC/60Hz 5A – 230VAC/60Hz 3.15AStandby/Average/Max 17W, 45W, 360W"
+      ],
+      [
+        "Dimensions",
+        "327 x 270 x 401 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image31.png",
+    "slide_idx": 29,
+    "slug": "mps2520p",
+    "filename": "mps2520p.html"
+  },
+  {
+    "model": "MPS1620P",
+    "category": "Front, Surround Speakers",
+    "features": [
+      "Bookshelf /on wall speaker",
+      "Powered studio monitor speaker",
+      "Impressive dynamic audio for professional production & high resolution recordings",
+      "High precision studio monitor to use for reference recordings, editing, processing, and master mixing for music and movie productions"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "Sealed or normal setting with high pass filter: 80Hz to 22kHz +/- 2dB Sealed or full range setting, wall or console loaded: 60Hz to 22kHz +/- 2dB Ported or normal setting: 45Hz to 22kHz +/- 2dB Ported or full range setting, wall or console loaded: 35Hz to 22kHz +/- 2dB"
+      ],
+      [
+        "Tweeter",
+        "1 x 1” soft dome"
+      ],
+      [
+        "Woofer",
+        "1 x 6.5” polypropylene"
+      ],
+      [
+        "Amplifier Power",
+        "Bass Midrange: 100W RMS / 200W Peak High Frequency: 50W RMS / 100W Peak"
+      ],
+      [
+        "Total Harmonic distortion:",
+        "0.025% into 4 ohms LF Channel0.025% into 4 ohms HF channel"
+      ],
+      [
+        "AC Power",
+        "115VAC/60Hz 2A – 230VAC/50Hz 1AStandby/Average/Max (15W, 30W, 240W)"
+      ],
+      [
+        "Dimensions",
+        "321 x 213 x 297 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image32.png",
+    "slide_idx": 30,
+    "slug": "mps1620p",
+    "filename": "mps1620p.html"
+  },
+  {
+    "model": "M40T",
+    "category": "Surround, Atmos Speakers",
+    "features": [
+      "Tripole® bookshelf / on wall speaker",
+      "Delivering rich details and dynamic sound defining every M&K Sound's loudspeaker",
+      "True voice match within the M Series",
+      "Available in satin black or white finishes",
+      "Mounting accessories are included providing simple and easy installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "100Hz to 20kHz (Average response in room +/- 2dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 4.6Ω)"
+      ],
+      [
+        "Tweeter",
+        "Shielded 1” / 25.4mm coated silk dome and neodymium magnet"
+      ],
+      [
+        "Woofer & Side Drivers",
+        "Shielded 1 x 4” coated glass fibreShielded 2 x 3″ polymer coated textured paper"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 125W"
+      ],
+      [
+        "Sensitivity",
+        "85dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "195 x 200 x 122 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image33.png",
+    "slide_idx": 31,
+    "slug": "m40t",
+    "filename": "m40t.html"
+  },
+  {
+    "model": "SUR55T",
+    "category": "Surround, Atmos Speakers",
+    "features": [
+      "Tripole® bookshelf / on wall speaker",
+      "THX Certified Select for medium-sized rooms, up to 56.63 m3 / 2,000 ft3 / in size.",
+      "Part of the 750 Series for a perfect acoustic match",
+      "Aluminium distortion killer rings for reduced distortion at high SPL levels",
+      "Mounting accessories are included providing simple and easy installation",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 4.2Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome"
+      ],
+      [
+        "Woofer & Side Drivers",
+        "Shielded 1 x 5.25” coated glass fibre2 x 3.25\" polymer coated textured paper"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "85dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "259 x 178 x 221 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image34.png",
+    "slide_idx": 32,
+    "slug": "sur55t",
+    "filename": "sur55t.html"
+  },
+  {
+    "model": "S150T",
+    "category": "Surround, Atmos Speakers",
+    "features": [
+      "Tripole® bookshelf / on wall speaker",
+      "THX Ultra2 Certified for larger home theatres, up to 84.95 m3 / 3,000 ft3in size",
+      "Part of the 150 Series for a perfect acoustic match",
+      "Selected components derived from 300 series",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome / low compression"
+      ],
+      [
+        "Woofer & Side Drivers",
+        "Shielded 1 x 5.25” coated glass fibre2 x 3.25\" polymer coated textured paper"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "85dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "Back: 270 x 265 x 150 (H x W x D mm)Front: 270 x 165 x 150 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image35.png",
+    "slide_idx": 33,
+    "slug": "s150t",
+    "filename": "s150t.html"
+  },
+  {
+    "model": "S300T",
+    "category": "Surround, Atmos Speakers",
+    "features": [
+      "Tripole® bookshelf / on wall speaker",
+      "THX Ultra2 Certified for larger home theatres, up to 84.95 m3 / 3,000 ft3in size",
+      "Part of the 300 Series for a perfect acoustic match",
+      "Resonance damped tweeter magnet system for precise transient control",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "80Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.5Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome / low compression"
+      ],
+      [
+        "Woofer & Side Drivers",
+        "Shielded 1 x 6.5” coated glass fibre4 x 3.5\" polymer coated textured paper"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 400W"
+      ],
+      [
+        "Sensitivity",
+        "89dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "Back: 345 x 227 x 180 (H x W x D mm)Front: 345 x 345 x 180 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image36.png",
+    "slide_idx": 34,
+    "slug": "s300t",
+    "filename": "s300t.html"
+  },
+  {
+    "model": "IW150T",
+    "category": "Surround, Atmos Speakers",
+    "features": [
+      "Tripole® in wall speaker",
+      "In wall equivalent of the famous S150T Tripole® surround speakers.",
+      "Low profile and metal mesh with paintable front grilles",
+      "Solid steel font bafﬂes to reinforce the wall and help prevent rattles and buzz",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "60Hz to 20kHz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Tweeter",
+        "1.1” coated silk dome / low compression"
+      ],
+      [
+        "Woofer & Side Drivers",
+        "Shielded 1 x 5.25” coated glass fibre2 x 2.35\" polymer coated textured paper"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "25 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "85dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "Cabinet: 354 x 311 x 95 (H x W x D mm)Cut Out: 331 x 288 (H x W mm)"
+      ]
+    ],
+    "image_file": "image37.png",
+    "slide_idx": 35,
+    "slug": "iw150t",
+    "filename": "iw150t.html"
+  },
+  {
+    "model": "IW28S",
+    "category": "Subwoofer",
+    "features": [
+      "In wall subwoofer",
+      "Specially tuned, ultra fast and mass loaded dual drivers",
+      "Ultra linear solid ferrite magnet system provides effective dissipation of heat",
+      "Low profile metal mesh grilles attached using rubber coated neodymium magnets",
+      "Solid steel font bafﬂes to reinforce the wall and help prevent rattles and buzz",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "28Hz to 200Hz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.2Ω)"
+      ],
+      [
+        "Woofer",
+        "2 x 8” hard texture paper"
+      ],
+      [
+        "Required Amplifier",
+        "Only to be driven by VA500"
+      ],
+      [
+        "Sensitivity",
+        "90dB at 100mV drive signal with 80Hz - VA500 amp"
+      ],
+      [
+        "Dimensions",
+        "Cabinet: 616 x 306 x 95 (H x W x D mm)Grille: 622 x 312 (H x W mm)Cut Out: 580 x 270 (H x W mm)"
+      ]
+    ],
+    "image_file": "image38.png",
+    "slide_idx": 36,
+    "slug": "iw28s",
+    "filename": "iw28s.html"
+  },
+  {
+    "model": "V10+",
+    "category": "Subwoofer",
+    "features": [
+      "Compact active subwoofer",
+      "Precision-engineered Class D amplifier",
+      "M&K’s proprietary ‘front end’ input stage",
+      "Layers of realistic and impactful bass performance",
+      "300 watts RMS and 600 watts of peak power"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "24Hz to 200Hz (Average response in room +/- 3dB)"
+      ],
+      [
+        "Variable Low Pass Filter",
+        "60Hz to 200Hz - continuously variable and 4th order)"
+      ],
+      [
+        "Phase Control",
+        "0° to 180° (Continuously Variable)"
+      ],
+      [
+        "Drive Unit",
+        "1 x 10”"
+      ],
+      [
+        "Amplifier Power",
+        "RMS: 300W0.5% THD at 300W into 4ΩPeak: 600W"
+      ],
+      [
+        "Power Consumption",
+        "Standby: 0.5WAverage: 30WMax: 150W"
+      ],
+      [
+        "Dimensions",
+        "345 x 345 x 345 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image39.png",
+    "slide_idx": 37,
+    "slug": "v10",
+    "filename": "v10.html"
+  },
+  {
+    "model": "V12+",
+    "category": "Subwoofer",
+    "features": [
+      "Compact active subwoofer",
+      "THX Select certified for rooms up to 56.63m3 / 2,000ft3",
+      "M&K® App applies acoustical corrections to deliver optimised listening conditions",
+      "Precision-engineered Class D amplifier",
+      "M&K’s proprietary ‘front end’ input stage",
+      "Layers of realistic and impactful bass performance"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "20Hz to 200Hz (Average response in room +/- 3dB)"
+      ],
+      [
+        "Variable Low Pass Filter",
+        "43Hz to 300Hz - continuously variable and 4th order)"
+      ],
+      [
+        "Phase Control",
+        "0° to 360° (Continuously Variable)"
+      ],
+      [
+        "Drive Unit",
+        "1 x 12”"
+      ],
+      [
+        "Amplifier Power",
+        "RMS: 400W0.5% THD at 300W into 4ΩPeak: 800W"
+      ],
+      [
+        "Power Consumption",
+        "Standby: 0.8WAverage: 40WMax: 200W"
+      ],
+      [
+        "Dimensions",
+        "395 x 395 x 395 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image40.png",
+    "slide_idx": 38,
+    "slug": "v12",
+    "filename": "v12.html"
+  },
+  {
+    "model": "V15+",
+    "category": "Subwoofer",
+    "features": [
+      "Compact active subwoofer",
+      "THX Ultra certified for larger rooms up to 84.95m3 / 3,000ft3",
+      "M&K® App applies acoustical corrections to deliver optimised listening conditions",
+      "Precision-engineered Class D amplifier",
+      "M&K’s proprietary ‘front end’ input stage",
+      "Layers of realistic and impactful bass performance"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "20Hz to 200Hz (Average response in room +/- 3dB)"
+      ],
+      [
+        "Variable Low Pass Filter",
+        "42Hz to 300Hz - continuously variable and 4th order)"
+      ],
+      [
+        "Phase Control",
+        "0° to 360° (Continuously Variable)"
+      ],
+      [
+        "Drive Unit",
+        "1 x 15”"
+      ],
+      [
+        "Amplifier Power",
+        "RMS: 500W0.5% THD at 300W into 4ΩPeak: 1000W"
+      ],
+      [
+        "Power Consumption",
+        "Standby: 0.8WAverage: 40WMax: 200W"
+      ],
+      [
+        "Dimensions",
+        "470 x 470 x 470 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image41.png",
+    "slide_idx": 39,
+    "slug": "v15",
+    "filename": "v15.html"
+  },
+  {
+    "model": "X10+",
+    "category": "Subwoofer",
+    "features": [
+      "Active subwoofer",
+      "THX Ultra certified for larger rooms up to 84.95m3 / 3,000ft3",
+      "Precision-engineered Class D amplifier",
+      "M&K Sound’s iconic Push-Pull subwoofer architecture and “reversed double driver”",
+      "Extruded aluminum Distortion Killer Shorting Rings also guarantee absolute control and distortion-free, exemplary performance in all settings."
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "20Hz to 200Hz (Average response in room +/- 3dB)"
+      ],
+      [
+        "Variable Low Pass Filter",
+        "40Hz to 125Hz - continuously variable and 4th order)"
+      ],
+      [
+        "Phase Control",
+        "0° to 180° (Continuously Variable)"
+      ],
+      [
+        "Drive Unit",
+        "2 x 10”"
+      ],
+      [
+        "Amplifier Power",
+        "RMS: 600W0.5% THD at 300W into 4ΩPeak: 1200W"
+      ],
+      [
+        "Power Consumption",
+        "Standby: 0.5WAverage: 100WMax: 600W"
+      ],
+      [
+        "Dimensions",
+        "647 x 400 x 340 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image42.png",
+    "slide_idx": 40,
+    "slug": "x10",
+    "filename": "x10.html"
+  },
+  {
+    "model": "X12+",
+    "category": "Subwoofer",
+    "features": [
+      "Active subwoofer",
+      "THX Ultra certified for larger rooms up to 84.95m3 / 3,000ft3",
+      "Precision-engineered Class D amplifier",
+      "M&K Sound’s iconic Push-Pull subwoofer architecture and “reversed double driver”",
+      "Extruded aluminum Distortion Killer Shorting Rings also guarantee absolute control and distortion-free, exemplary performance in all settings."
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "18Hz to 200Hz (Average response in room +/- 3dB)"
+      ],
+      [
+        "Variable Low Pass Filter",
+        "40Hz to 125Hz - continuously variable and 4th order)"
+      ],
+      [
+        "Phase Control",
+        "0° to 180° (Continuously Variable)"
+      ],
+      [
+        "Drive Unit",
+        "2 x 12”"
+      ],
+      [
+        "Amplifier Power",
+        "RMS: 600W0.5% THD at 300W into 4ΩPeak: 1200W"
+      ],
+      [
+        "Power Consumption",
+        "Standby: 0.5WAverage: 120WMax: 800W"
+      ],
+      [
+        "Dimensions",
+        "728 x 450 x 385 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image43.png",
+    "slide_idx": 41,
+    "slug": "x12",
+    "filename": "x12.html"
+  },
+  {
+    "model": "V15+",
+    "category": "Subwoofer",
+    "features": [
+      "Active subwoofer",
+      "THX Dominus certified for larger rooms up to 184.06m3 / 6,500ft3",
+      "Precision-engineered Class D amplifier",
+      "M&K Sound’s iconic Push-Pull subwoofer architecture and “reversed double driver”",
+      "Extruded aluminum Distortion Killer Shorting Rings also guarantee absolute control and distortion-free, exemplary performance in all settings."
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "16Hz to 200Hz (Average response in room +/- 3dB)"
+      ],
+      [
+        "Variable Low Pass Filter",
+        "40Hz to 125Hz - continuously variable and 4th order)"
+      ],
+      [
+        "Phase Control",
+        "0° to 360° (Continuously Variable)"
+      ],
+      [
+        "Drive Unit",
+        "2 x 15”"
+      ],
+      [
+        "Amplifier Power",
+        "RMS: 700W0.5% THD at 300W into 4ΩPeak: 1400W"
+      ],
+      [
+        "Power Consumption",
+        "Standby: 0.5WAverage: 120WMax: 800W"
+      ],
+      [
+        "Dimensions",
+        "833 x 515 x 460 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image44.png",
+    "slide_idx": 42,
+    "slug": "v15-2",
+    "filename": "v15-2.html"
+  },
+  {
+    "model": "Movie 5.1 System",
+    "category": "Subwoofer",
+    "features": [
+      "Compact 5.1 surround sound speaker set",
+      "Three K50 speakers, Two K40T Tripole® speakers, One V8 movie subwoofer",
+      "Conveys the quietest atmospheric vignettes to the loudest action scenes",
+      "While competing against music and sound effects, the K50 front centre speaker delivers crystal clear dialogue every time",
+      "5 x channels of amplification required"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "K50 & K40T: 100Hz to 20kHz (Average response in room +/- 2 dB)V8 sub: 30Hz to 200Hz (Average response in room +/- 2 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "K50 & K40T: 4Ω"
+      ],
+      [
+        "Tweeter (K50 & K40T)",
+        "Shielded 1” coated silk dome  with neodymium magnet"
+      ],
+      [
+        "Woofer & Side Drivers (K50 & K40T)",
+        "Shielded 4\" coated glass fibre2 x 3\" polymer coated textured paper"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "K50 & K40T: 25 to 125W"
+      ],
+      [
+        "Sensitivity",
+        "K50 & K40T: 85dB (Average SPL 2.83V / 1m on axis 200Hz to 10kHz)"
+      ],
+      [
+        "Dimensions",
+        "K50: 250 x 130 x 85 (H x W x D mm)K40: 250 x 130 x 85 (H x W x D mm)K50: 133 x 133 x 114 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image45.png",
+    "slide_idx": 43,
+    "slug": "movie-5-1-system",
+    "filename": "movie-5-1-system.html"
+  },
+  {
+    "model": "C15S / VA500",
+    "category": "Subwoofer",
+    "features": [
+      "C155S Custom Install Subwoofer with VA500 Blue edition subwoofer amplifier",
+      "Built on the technology of M&K Sound’s X+ Series and V+ Series subwoofers with output power being on a par with the dual 10\" X+ subwoofer",
+      "Designed to be installed behind the screen and is only 298mm deep",
+      "High efficiency, cool running and low standby voltage consumption Class D amplifier"
+    ],
+    "specs": [
+      [
+        "Frequency Response",
+        "22Hz to 200Hz (Average response in room +/- 3 dB)"
+      ],
+      [
+        "Nominal Impedance",
+        "4Ω (Z-min 3.4Ω)"
+      ],
+      [
+        "Woofer",
+        "1 x 15” Ultra stiff paper with fibre glass dust cap"
+      ],
+      [
+        "Required Amplifier",
+        "Only to be driven by VA500 Blue Edition subwoofer amplifier"
+      ],
+      [
+        "Amplifier Power",
+        "RMS: 500WPeak: 800W"
+      ],
+      [
+        "Dimensions",
+        "C155S: 725 x 498 x 298 (H x W x D mm)VA500 (with rack ears): 44 x 483 x 224 (H x W x D mm)VA500 (without rack ears): 44 x 429 x 224 (H x W x D mm)"
+      ]
+    ],
+    "image_file": "image46.png",
+    "slide_idx": 44,
+    "slug": "c15s-va500",
+    "filename": "c15s-va500.html"
+  }
+]

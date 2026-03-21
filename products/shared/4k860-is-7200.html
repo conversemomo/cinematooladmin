@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Christie — 4K860-IS 7200</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #111111; font-family: 'Montserrat', sans-serif; padding: 40px; display: flex; flex-direction: column; align-items: center; gap: 24px; }
+  .demo-label { color: #777; font-size: 11px; letter-spacing: 1px; text-align: center; line-height: 1.9; }
+  .demo-label strong { color: #ccc; }
+  .slide { position: relative; width: 960px; height: 540px; overflow: hidden; flex-shrink: 0; background: #111111; }
+  .accent-bar { position: absolute; left: 96px; top: 46px; width: 81px; height: 4px; background: #888888; }
+  .logo { position: absolute; left: 885px; top: 31px; width: 45px; height: 30px; opacity: 0.6; object-fit: contain; }
+  .slide-title { position: absolute; left: 96px; top: 71px; width: 500px; height: auto; overflow: visible; }
+  .title-brand { font-size: 22px; font-weight: 300; color: rgba(255,255,255,0.5); letter-spacing: 5px; text-transform: uppercase; white-space: nowrap; }
+  .title-model { font-size: 22px; font-weight: 400; color: #fff; letter-spacing: 0.5px; outline: none; min-width: 30px; border-bottom: 1px dashed transparent; transition: border-color 0.2s; margin-left: 16px; white-space: pre-wrap; }
+  .title-model:focus { border-bottom-color: rgba(180,180,180,0.5); }
+  .left-sidebar { position: absolute; left: 14px; top: 166px; width: 20px; height: 189px; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; opacity: 0.5; }
+  .v-text { writing-mode: vertical-rl; font-size: 7px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; color: #ffffff; white-space: nowrap; }
+  .v-tail { position: absolute; left: 24px; top: 420px; width: 1px; height: 95px; background: rgba(255,255,255,0.22); }
+  .extra-img { position: absolute; left: 5px; top: 361px; width: 38px; height: 53px; object-fit: contain; display: none; z-index: 100; }
+  .extra-img.has-image { display: block; }
+  .slide.layout-mode .extra-img { display: block; outline: 1px dashed rgba(255,180,0,0.4); }
+  .product-image { position: absolute; left: 110px; top: 180px; width: 210px; height: 270px; object-fit: contain; z-index: 1; }
+  .features-list { position: absolute; left: 374px; top: 135px; width: 462px; list-style: none; }
+  .features-list li { display: flex; align-items: flex-start; gap: 8px; font-size: 9px; font-weight: 400; color: #bfbfbf; letter-spacing: 1px; line-height: 2.0; position: relative; }
+  .features-list li::before { content: '•'; color: rgba(180,180,180,0.5); flex-shrink: 0; }
+  .bullet-del { background: none; border: none; color: rgba(255,100,100,0.7); font-size: 9px; font-weight: 700; cursor: pointer; opacity: 0; transition: opacity 0.15s; padding: 0 2px; flex-shrink: 0; align-self: center; }
+  .features-list li:hover .bullet-del { opacity: 1; }
+  .specs-table { position: absolute; left: 376px; top: 283px; width: 466px; border-collapse: collapse; font-size: 8px; }
+  .specs-table tr { background: #D9D9D9; }
+  .specs-table td { padding: 4.5px 9px; vertical-align: middle; line-height: 1.5; border-bottom: 0.25px dashed #ffffff; color: #3B3838; outline: none; transition: background 0.15s; }
+  .specs-table tr:last-child td { border-bottom: none; }
+  .specs-table td:focus { background: #c8c8c8 !important; }
+  .specs-table td:first-child { font-weight: 600; width: 44%; border-right: 0.25px dashed #ffffff; }
+  .specs-table td:nth-child(2) { font-weight: 500; }
+  .specs-table td.row-del { width: 0; padding: 0; border: none; background: transparent; overflow: visible; white-space: nowrap; }
+  .specs-table td.row-del button { background: none; border: none; color: rgba(255,100,100,0.7); font-size: 9px; font-weight: 700; cursor: pointer; opacity: 0; transition: opacity 0.15s; padding: 0 4px; }
+  .specs-table tr:hover .row-del button { opacity: 1; }
+  .edit-hint { position: absolute; bottom: 7px; right: 10px; font-size: 6.5px; letter-spacing: 2px; color: rgba(180,180,180,0.2); text-transform: uppercase; }
+  [contenteditable] { outline: none; }
+  .slide.layout-mode [data-movable] { outline: 1px dashed rgba(255,180,0,0.35); cursor: move; }
+  .slide.layout-mode [data-movable]:hover { outline: 1px dashed rgba(255,180,0,0.8); }
+  .slide.layout-mode [data-movable].selected { outline: 2px solid #ff9600 !important; z-index: 50; }
+  #resizeCorner { display: none; position: absolute; width: 12px; height: 12px; background: #ff9600; border: 2px solid #fff; border-radius: 2px; cursor: se-resize; z-index: 200; }
+  #uploadOverlay { display: none; position: absolute; background: rgba(0,0,0,0.65); color: #ff9600; font-size: 9px; font-weight: 600; letter-spacing: 1px; text-align: center; cursor: pointer; z-index: 150; align-items: center; justify-content: center; flex-direction: column; gap: 4px; border: 2px dashed #ff9600; }
+  #uploadOverlay.visible { display: flex; }
+  #uploadOverlay:hover { background: rgba(0,0,0,0.8); }
+  #layoutPanel { display: none; background: #1a1400; border: 1px solid #553300; border-radius: 6px; padding: 10px 16px; font-size: 10px; color: #ff9600; letter-spacing: 0.5px; gap: 12px; align-items: center; flex-wrap: wrap; }
+  #layoutPanel.visible { display: flex; }
+  #layoutPanel strong { color: #ffb84d; }
+  #coordsDisplay { font-family: monospace; color: #ffd080; }
+  #layoutPanel .lp-btn { padding: 4px 10px; border-radius: 4px; font-size: 9px; font-family: 'Montserrat', sans-serif; font-weight: 600; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; border: none; }
+  .lp-upload { background: #332200; color: #ff9600; border: 1px solid #664400 !important; }
+  .lp-copy   { background: #1a2a1a; color: #6fdc8c; border: 1px solid #2a4a2a !important; }
+  .edit-controls { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .btn { padding: 9px 22px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; border: none; transition: opacity 0.2s; }
+  .btn:hover { opacity: 0.8; }
+  .btn-primary { background: #555; color: #fff; }
+  .btn-outline  { background: transparent; border: 1px solid #444; color: #888; }
+  .btn-add      { background: #1a1a1a; color: #aaa; border: 1px solid #333; }
+  .btn-layout   { background: #1a1a1a; color: #aaa; border: 1px solid #444; }
+  .btn-layout.on { background: #332200; color: #ffb84d; border-color: #ff9600; }
+</style>
+</head>
+<body>
+<p class="demo-label"><strong>Christie — 4K860-IS 7200</strong><br>Click any text to edit · hover a row/bullet to delete · use buttons below to add</p>
+<div class="slide" id="slide">
+  <div class="accent-bar" id="accentBar" data-movable data-type="shape" data-label="Accent Bar"></div>
+  <img class="logo" id="logoImg" data-movable data-type="image" data-label="Logo" src="../../assets/habitech-logo-light.svg" alt="Habitech">
+  <div class="slide-title" id="slideTitle" data-movable data-type="block" data-label="Title">
+    <span class="title-brand" id="titleBrand">Christie</span>
+    <span class="title-model" id="titleModel" contenteditable="true">4K860-IS 7200</span>
+  </div>
+  <div class="left-sidebar" id="leftSidebar" data-movable data-type="block" data-label="Sidebar Text">
+    <span class="v-text">Projector</span>
+  </div>
+  <div class="v-tail" id="vTail" data-movable data-type="shape" data-label="Sidebar Line"></div>
+  <img class="extra-img" id="extraImg" data-movable data-type="image" data-label="Extra Image" src="" alt="">
+  <img class="product-image" id="productImg" data-movable data-type="image" data-label="Product Image" src="../../assets/shared/slide92_img1.png" alt="4K860-IS 7200">
+  <div id="resizeCorner"></div>
+  <div id="uploadOverlay">&#128193;<span>Click to upload image</span></div>
+  <ul class="features-list" id="featuresList">
+    <li><span contenteditable="true">Part of the Inspire Series, compact and lightweight with outstanding size to brightness ratio</span><button class="bullet-del" onclick="this.closest('li').remove()">×</button></li>
+    <li><span contenteditable="true">4K UHD resolution, 24/7 whisper quiet operation and IP5X dust resistant optical engine</span><button class="bullet-del" onclick="this.closest('li').remove()">×</button></li>
+    <li><span contenteditable="true">High contrast ratio 3,000,000:1 with Christie RealBlack enabled</span><button class="bullet-del" onclick="this.closest('li').remove()">×</button></li>
+    <li><span contenteditable="true">Built in warping, blending and alignment with Christie Twist</span><button class="bullet-del" onclick="this.closest('li').remove()">×</button></li>
+  </ul>
+  <table class="specs-table" id="specsTable">
+    <tr><td contenteditable="true">Lens</td><td contenteditable="true">1.25-2.0:1 fixed lens</td><td class="row-del"><button onclick="this.closest('tr').remove()">×</button></td></tr>
+    <tr><td contenteditable="true">Illumination Type</td><td contenteditable="true">High efficiency blue laser phosphor</td><td class="row-del"><button onclick="this.closest('tr').remove()">×</button></td></tr>
+    <tr><td contenteditable="true">Performance</td><td contenteditable="true">20,000 hours to 50% brightness</td><td class="row-del"><button onclick="this.closest('tr').remove()">×</button></td></tr>
+    <tr><td contenteditable="true">Display Resolution</td><td contenteditable="true">4K UHD 3840x2160</td><td class="row-del"><button onclick="this.closest('tr').remove()">×</button></td></tr>
+    <tr><td contenteditable="true">Brightness</td><td contenteditable="true">7,200 ANSI lumens</td><td class="row-del"><button onclick="this.closest('tr').remove()">×</button></td></tr>
+    <tr><td contenteditable="true">Inputs</td><td contenteditable="true">2x HDMI 2.0, 1x DisplayPort 1.2, HDBT, RJ45, RS232</td><td class="row-del"><button onclick="this.closest('tr').remove()">×</button></td></tr>
+    <tr><td contenteditable="true">Dimensions (H x W x D)</td><td contenteditable="true">157 x 406 x 480 mm</td><td class="row-del"><button onclick="this.closest('tr').remove()">×</button></td></tr>
+    <tr><td contenteditable="true">Weight</td><td contenteditable="true">15 kgs</td><td class="row-del"><button onclick="this.closest('tr').remove()">×</button></td></tr>
+  </table>
+  <span class="edit-hint">hover row/bullet → × to delete</span>
+</div>
+<div id="layoutPanel">
+  <strong id="labelDisplay">–</strong>
+  <span id="coordsDisplay">–</span>
+  <span id="textControls" style="display:none; gap:8px; align-items:center; flex-wrap:wrap;"></span>
+  <button class="lp-btn lp-upload" id="uploadBtn" style="display:none" onclick="triggerUpload()">&#128193; Upload Image</button>
+  <button class="lp-btn lp-copy" onclick="copyAllCSS()">&#128203; Copy All CSS</button>
+</div>
+<div class="edit-controls">
+  <button class="btn btn-add" onclick="addTableRow()">+ Add Table Row</button>
+  <button class="btn btn-add" onclick="addBullet()">+ Add Bullet Point</button>
+  <button class="btn btn-layout" id="layoutBtn" onclick="toggleLayoutMode()">&#10162; Edit Layout</button>
+  <button class="btn btn-primary" onclick="alert('Saves to products.json via admin.')">Save to Admin</button>
+  <button class="btn btn-outline" onclick="window.print()">Export as PDF</button>
+</div>
+<input type="file" id="fileInput" accept="image/*" style="display:none">
+<script>
+
+  const BULLET_TABLE_GAP = 16;
+  function syncTablePosition() { const list = document.getElementById('featuresList'), table = document.getElementById('specsTable'); table.style.top = (list.offsetTop + list.offsetHeight + BULLET_TABLE_GAP) + 'px'; }
+  new MutationObserver(syncTablePosition).observe(document.getElementById('featuresList'), { childList: true, subtree: true });
+  window.addEventListener('load', syncTablePosition);
+  function addTableRow() { const t = document.getElementById('specsTable'), tr = document.createElement('tr'); tr.innerHTML = `<td contenteditable="true">Property</td><td contenteditable="true">Value</td><td class="row-del"><button onclick="this.closest('tr').remove()">×</button></td>`; t.appendChild(tr); tr.querySelector('td').focus(); }
+  function addBullet() { const l = document.getElementById('featuresList'), li = document.createElement('li'); li.innerHTML = `<span contenteditable="true">New feature</span><button class="bullet-del" onclick="this.closest('li').remove()">×</button>`; l.appendChild(li); li.querySelector('span').focus(); syncTablePosition(); }
+  const slide = document.getElementById('slide'), corner = document.getElementById('resizeCorner'), uploadOvl = document.getElementById('uploadOverlay'), panel = document.getElementById('layoutPanel'), labelDisp = document.getElementById('labelDisplay'), coordsDisp = document.getElementById('coordsDisplay'), uploadBtn = document.getElementById('uploadBtn'), layoutBtn = document.getElementById('layoutBtn'), fileInput = document.getElementById('fileInput'), textControls = document.getElementById('textControls');
+  let layoutMode = false, selected = null, dragging = false, resizing = false, ox = 0, oy = 0, rox = 0, roy = 0, rw0 = 0, rh0 = 0;
+  const iStyle = 'width:44px;padding:2px 5px;background:#222;color:#ffd080;border:1px solid #555;border-radius:3px;font-size:10px;font-family:monospace;';
+  const lbl = t => `<span style="color:#aaa;font-size:9px">${t}</span>`;
+  function buildTextControls(el) {
+    textControls.innerHTML = ''; textControls.style.display = 'none'; if (!el) return;
+    if (el.dataset.label === 'Sidebar Text') { const vt = el.querySelectorAll('.v-text'), sz = Math.round(parseFloat(getComputedStyle(vt[0]).fontSize)), ls = Math.round(parseFloat(getComputedStyle(vt[0]).letterSpacing)) || 1, op = Math.round(parseFloat(getComputedStyle(el).opacity) * 100); textControls.innerHTML = `${lbl('Size')} <input id="tc_sz" type="number" value="${sz}" min="3" max="20" style="${iStyle}"> ${lbl('px')} &nbsp; ${lbl('Spacing')} <input id="tc_ls" type="number" value="${ls}" min="0" max="10" style="${iStyle}"> ${lbl('px')} &nbsp; ${lbl('Colour')} <input id="tc_col" type="color" value="#ffffff" style="width:28px;height:20px;padding:0;border:none;background:none;cursor:pointer;vertical-align:middle"> &nbsp; ${lbl('Opacity')} <input id="tc_op" type="range" value="${op}" min="0" max="100" style="width:60px;accent-color:#ff9600;vertical-align:middle"> <span id="tc_op_val" style="color:#ffd080;font-size:9px;font-family:monospace;min-width:28px">${op}%</span>`; textControls.style.display = 'flex'; textControls.querySelector('#tc_sz').oninput = e => vt.forEach(v => v.style.fontSize = e.target.value + 'px'); textControls.querySelector('#tc_ls').oninput = e => vt.forEach(v => v.style.letterSpacing = e.target.value + 'px'); textControls.querySelector('#tc_col').oninput = e => vt.forEach(v => v.style.color = e.target.value); textControls.querySelector('#tc_op').oninput = e => { el.style.opacity = e.target.value / 100; document.getElementById('tc_op_val').textContent = e.target.value + '%'; };
+    } else if (el.dataset.label === 'Title') { const brand = document.getElementById('titleBrand'), model = document.getElementById('titleModel'), bsz = Math.round(parseFloat(getComputedStyle(brand).fontSize)), msz = Math.round(parseFloat(getComputedStyle(model).fontSize)), mls = Math.round(parseFloat(getComputedStyle(model).letterSpacing)) || 4; textControls.innerHTML = `${lbl('Brand size')} <input id="tc_bsz" type="number" value="${bsz}" min="8" max="60" style="${iStyle}"> ${lbl('px &nbsp; Model size')} <input id="tc_msz" type="number" value="${msz}" min="8" max="60" style="${iStyle}"> ${lbl('px &nbsp; Model spacing')} <input id="tc_mls" type="number" value="${mls}" min="0" max="20" style="${iStyle}"> ${lbl('px')}`; textControls.style.display = 'flex'; textControls.querySelector('#tc_bsz').oninput = e => brand.style.fontSize = e.target.value + 'px'; textControls.querySelector('#tc_msz').oninput = e => model.style.fontSize = e.target.value + 'px'; textControls.querySelector('#tc_mls').oninput = e => model.style.letterSpacing = e.target.value + 'px';
+    } else if (el.dataset.label === 'Logo' || el.dataset.label === 'Extra Image') { const sz = Math.round(el.offsetWidth), op = Math.round(parseFloat(window.getComputedStyle(el).opacity) * 100); textControls.innerHTML = `${lbl('Width')} <input id="tc_lw" type="number" value="${sz}" min="10" max="200" style="${iStyle}"> ${lbl('px')} &nbsp; ${lbl('Opacity')} <input id="tc_op" type="range" value="${op}" min="0" max="100" style="width:70px;accent-color:#ff9600;vertical-align:middle"> <span id="tc_op_val" style="color:#ffd080;font-size:9px;font-family:monospace;min-width:28px">${op}%</span>`; textControls.style.display = 'flex'; textControls.querySelector('#tc_lw').oninput = e => { el.style.width = e.target.value + 'px'; refreshInfo(el); }; textControls.querySelector('#tc_op').oninput = e => { el.style.opacity = e.target.value / 100; document.getElementById('tc_op_val').textContent = e.target.value + '%'; }; }
+  }
+  function getPos(el) { const r = el.getBoundingClientRect(), sr = slide.getBoundingClientRect(); return { l: Math.round(r.left - sr.left), t: Math.round(r.top - sr.top) }; }
+  function getSize(el) { return { w: Math.round(el.offsetWidth), h: Math.round(el.offsetHeight) }; }
+  function refreshInfo(el) { if (!el) return; const p = getPos(el), s = getSize(el); labelDisp.textContent = el.dataset.label; coordsDisp.textContent = `left: ${p.l}px  ·  top: ${p.t}px  ·  w: ${s.w}px  ·  h: ${s.h}px`; corner.style.left = (p.l + s.w - 6) + 'px'; corner.style.top = (p.t + s.h - 6) + 'px'; const isImg = el.dataset.type === 'image'; uploadBtn.style.display = isImg ? '' : 'none'; if (isImg) { uploadOvl.style.left = p.l+'px'; uploadOvl.style.top = p.t+'px'; uploadOvl.style.width = s.w+'px'; uploadOvl.style.height = s.h+'px'; } }
+  function selectElement(el) { if (selected) { selected.classList.remove('selected'); corner.style.display = 'none'; } selected = el; if (!el) { panel.classList.remove('visible'); buildTextControls(null); return; } if (el.style.right) { const p = getPos(el); el.style.left = p.l+'px'; el.style.top = p.t+'px'; el.style.right = ''; } el.classList.add('selected'); corner.style.display = (el.dataset.type === 'image' || el.dataset.type === 'shape') ? 'block' : 'none'; panel.classList.add('visible'); refreshInfo(el); buildTextControls(el); }
+  function toggleLayoutMode() { layoutMode = !layoutMode; slide.classList.toggle('layout-mode', layoutMode); layoutBtn.classList.toggle('on', layoutMode); layoutBtn.textContent = layoutMode ? '✓ Done Editing' : '⤢ Edit Layout'; if (!layoutMode) { selectElement(null); corner.style.display = 'none'; } }
+  slide.addEventListener('click', e => { if (!layoutMode) return; const el = e.target.closest('[data-movable]'); if (!el) selectElement(null); });
+  slide.addEventListener('mousedown', e => { if (!layoutMode) return; const el = e.target.closest('[data-movable]'); if (!el) return; if (el !== selected) selectElement(el); dragging = true; const p = getPos(el); ox = e.clientX - p.l; oy = e.clientY - p.t; e.preventDefault(); });
+  corner.addEventListener('mousedown', e => { if (!layoutMode || !selected) return; resizing = true; rox = e.clientX; roy = e.clientY; rw0 = selected.offsetWidth; rh0 = selected.offsetHeight; e.preventDefault(); e.stopPropagation(); });
+  document.addEventListener('mousemove', e => { if (dragging && selected) { selected.style.left = (e.clientX-ox)+'px'; selected.style.top = (e.clientY-oy)+'px'; refreshInfo(selected); } if (resizing && selected) { selected.style.width = Math.max(10,rw0+(e.clientX-rox))+'px'; selected.style.height = Math.max(4,rh0+(e.clientY-roy))+'px'; refreshInfo(selected); } });
+  document.addEventListener('mouseup', () => { dragging = false; resizing = false; });
+  function triggerUpload() { fileInput.click(); }
+  fileInput.addEventListener('change', e => { const file = e.target.files[0]; if (!file || !selected || selected.tagName !== 'IMG') return; selected.src = URL.createObjectURL(file); selected.classList.add('has-image'); fileInput.value = ''; setTimeout(() => refreshInfo(selected), 100); });
+  uploadOvl.addEventListener('click', triggerUpload);
+  function copyAllCSS() { const items = slide.querySelectorAll('[data-movable]'); let out = '/* ── Layout positions ── */\n'; items.forEach(el => { const p = getPos(el), s = getSize(el); let extra = ''; const op = parseFloat(window.getComputedStyle(el).opacity); if (op < 0.999) extra += `; opacity: ${Math.round(op * 100)}%`; if (el.tagName === 'IMG' && el.src && el.src.includes('/')) { const fname = el.src.split('/').pop(); if (fname) extra += `; file: ${fname}`; } if (el.dataset.label === 'Sidebar Text') { const vt = el.querySelector('.v-text'); if (vt) extra += `; colour: ${window.getComputedStyle(vt).color}`; } out += `/* ${el.dataset.label} */\n  left: ${p.l}px; top: ${p.t}px; width: ${s.w}px; height: ${s.h}px${extra};\n\n`; }); navigator.clipboard.writeText(out).then(() => { const btn = event.target; btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = '📋 Copy All CSS', 1500); }); }
+
+</script>
+</body>
+</html>

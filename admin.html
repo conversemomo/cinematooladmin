@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cinema Admin — Habitech</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&family=Karla:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --night:   #231F20;
+  --blue:    #428CAF;
+  --light:   #E4ECED;
+  --bg:      #f0f2f4;
+  --card:    #ffffff;
+  --border:  #dde2e6;
+  --muted:   #5a6a78;
+  --red:     #ef4444;
+  --green:   #22c55e;
+  --mk:      #ff4444;
+  --sonance: #78B6E4;
+  --wisdom:  #c084fc;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Karla', sans-serif; background: var(--bg); color: var(--night); height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+/* HEADER */
+header { background: var(--night); height: 52px; display: flex; align-items: center; gap: 12px; padding: 0 20px; flex-shrink: 0; border-bottom: 3px solid var(--blue); }
+.h-logo  { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; color: #fff; letter-spacing: 1px; }
+.h-sep   { width: 1px; height: 20px; background: rgba(255,255,255,0.15); }
+.h-sub   { font-family: 'Montserrat', sans-serif; font-size: 9px; font-weight: 500; color: rgba(255,255,255,0.45); letter-spacing: 1.5px; text-transform: uppercase; }
+.h-badge { background: var(--blue); color: #fff; padding: 2px 8px; border-radius: 3px; font-size: 9px; font-weight: 700; letter-spacing: 1px; font-family: 'Montserrat', sans-serif; }
+.h-spacer { flex: 1; }
+.h-note  { font-size: 10px; color: rgba(255,255,255,0.4); }
+.h-link  { color: rgba(255,255,255,0.5); font-size: 11px; text-decoration: none; }
+.h-link:hover { color: #fff; }
+
+/* LAYOUT */
+.app { display: flex; flex: 1; overflow: hidden; }
+
+/* SIDEBAR */
+.sidebar { width: 265px; background: var(--card); border-right: 1px solid var(--border); display: flex; flex-direction: column; flex-shrink: 0; }
+.sb-search { padding: 10px; border-bottom: 1px solid var(--border); }
+.sb-search input { width: 100%; padding: 7px 10px; border: 1.5px solid var(--border); border-radius: 4px; font-size: 12px; font-family: 'Karla', sans-serif; outline: none; }
+.sb-search input:focus { border-color: var(--blue); }
+.sb-list { flex: 1; overflow-y: auto; }
+.brand-hdr { padding: 7px 12px; font-family: 'Montserrat', sans-serif; font-size: 8px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--blue); background: var(--light); border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 1; }
+.prod-item { padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #f3f5f7; transition: background 0.1s; }
+.prod-item:hover { background: #f0f7fb; }
+.prod-item.active { background: #dff0f8; border-left: 3px solid var(--blue); padding-left: 9px; }
+.prod-name { font-size: 12px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.prod-mfr  { font-size: 10px; color: var(--muted); }
+
+/* MAIN */
+.main { flex: 1; overflow-y: auto; padding: 20px 24px; display: flex; flex-direction: column; gap: 16px; }
+
+/* EMPTY STATE */
+.empty { height: 240px; display: flex; flex-direction: column; align-items: center; justify-content: center; color: var(--muted); gap: 8px; }
+.empty h3 { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 600; }
+.empty p  { font-size: 11px; }
+
+/* CARD */
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; }
+.card-title { font-family: 'Montserrat', sans-serif; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; }
+.file-tag { font-size: 10px; color: var(--muted); background: var(--light); padding: 2px 7px; border-radius: 3px; font-family: monospace; font-weight: 400; }
+
+/* FORM */
+.fg { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 14px; }
+.fr { display: flex; flex-direction: column; gap: 4px; }
+.fr.full { grid-column: 1 / -1; }
+label { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
+input[type=text], textarea, select {
+  padding: 8px 10px; border: 1.5px solid var(--border); border-radius: 4px;
+  font-size: 13px; font-family: 'Karla', sans-serif; color: var(--night);
+  outline: none; width: 100%;
+}
+input[type=text]:focus, textarea:focus, select:focus {
+  border-color: var(--blue); box-shadow: 0 0 0 3px rgba(66,140,175,0.1);
+}
+textarea { resize: vertical; }
+
+/* SPECS */
+.specs-wrap { border: 1.5px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 14px; }
+.specs-hdr { display: grid; grid-template-columns: 1fr 1.5fr 28px; background: var(--light); border-bottom: 1px solid var(--border); }
+.specs-hdr span { padding: 5px 10px; font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: var(--blue); }
+.spec-row { display: grid; grid-template-columns: 1fr 1.5fr 28px; border-bottom: 1px solid #f0f3f5; }
+.spec-row:last-child { border-bottom: none; }
+.spec-row input { border: none; border-radius: 0; padding: 7px 10px; font-size: 12px; background: transparent; outline: none; width: 100%; font-family: 'Karla', sans-serif; }
+.spec-row input:first-child { border-right: 1px solid #f0f3f5; }
+.spec-row input:focus { background: #f5fafc; }
+.spec-del { background: none; border: none; color: #ccc; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+.spec-del:hover { color: var(--red); }
+
+/* BUTTONS */
+.btn { padding: 9px 18px; border-radius: 4px; font-size: 10px; font-family: 'Montserrat', sans-serif; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; cursor: pointer; border: none; transition: all 0.15s; }
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover { background: #3478a0; }
+.btn-ghost  { background: transparent; border: 1.5px solid var(--border); color: var(--night); }
+.btn-ghost:hover { border-color: var(--blue); color: var(--blue); }
+.btn-sm { padding: 5px 11px; font-size: 9px; }
+.row-btns { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.save-note { font-size: 10px; color: var(--muted); }
+
+/* SECTION HEADER */
+.sec-hdr { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.sec-lbl  { font-size: 9px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; color: var(--muted); }
+
+/* PREVIEW */
+.preview-wrap { background: #111; border-radius: 8px; overflow: hidden; }
+.preview-bar  { padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; }
+.preview-bar span { font-size: 9px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: rgba(255,255,255,0.35); font-family: 'Montserrat', sans-serif; }
+.preview-box { position: relative; overflow: hidden; width: 100%; }
+.preview-box iframe { width: 960px; height: 540px; border: none; pointer-events: none; transform-origin: 0 0; display: block; }
+
+/* NEW PRODUCT BRAND BUTTONS */
+.brand-btn-row { display: flex; gap: 10px; margin-bottom: 16px; }
+.brand-btn { flex: 1; padding: 12px; border-radius: 6px; border: 2px solid var(--border); background: var(--card); cursor: pointer; text-align: center; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; transition: all 0.15s; color: var(--muted); }
+.brand-btn:hover { border-color: var(--blue); color: var(--blue); }
+.brand-btn.sel-mk      { border-color: var(--mk);      color: var(--mk);      background: #fff0f0; }
+.brand-btn.sel-sonance { border-color: var(--sonance); color: var(--sonance); background: #f0f7ff; }
+.brand-btn.sel-wisdom  { border-color: var(--wisdom);  color: var(--wisdom);  background: #faf0ff; }
+
+/* TOAST */
+#toast { position: fixed; bottom: 20px; right: 20px; background: var(--night); color: #fff; padding: 10px 16px; border-radius: 6px; font-size: 12px; font-weight: 500; box-shadow: 0 4px 20px rgba(0,0,0,0.25); transform: translateY(60px); opacity: 0; transition: all 0.25s; z-index: 999; max-width: 300px; }
+#toast.show { transform: translateY(0); opacity: 1; }
+#toast.ok   { border-left: 4px solid var(--green); }
+#toast.err  { border-left: 4px solid var(--red); }
+#toast.info { border-left: 4px solid var(--blue); }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="h-logo">HABITECH</span>
+  <div class="h-sep"></div>
+  <span class="h-sub">Cinema Proposal Builder</span>
+  <span class="h-badge">Admin</span>
+  <div class="h-spacer"></div>
+  <span class="h-note">Save downloads the file · drop it into your products/ folder to publish</span>
+  <div class="h-sep"></div>
+  <a href="index.html" class="h-link">← Back to Tool</a>
+</header>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+    <div class="sb-search">
+      <input type="text" id="searchInput" placeholder="Search products…" oninput="filterList(this.value)">
+    </div>
+    <div class="sb-list" id="sbList">
+      <div style="padding:20px;text-align:center;color:#aaa;font-size:12px">Loading…</div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- EMPTY STATE -->
+    <div class="empty" id="emptyState">
+      <h3>Select a product to edit</h3>
+      <p>Or create a new product slide from a brand template</p>
+      <div style="margin-top:14px">
+        <button class="btn btn-primary" onclick="showNewPanel()">+ New Product</button>
+      </div>
+    </div>
+
+    <!-- EDIT PANEL -->
+    <div id="editPanel" style="display:none">
+      <div class="card">
+        <div class="card-title">
+          <span id="editTitle">–</span>
+          <span class="file-tag" id="editPath">–</span>
+          <div style="flex:1"></div>
+          <button class="btn btn-ghost btn-sm" onclick="openSlide()">↗ Open Slide</button>
+          <button class="btn btn-ghost btn-sm" onclick="showNewPanel()">+ New Product</button>
+        </div>
+
+        <div class="fg">
+          <div class="fr">
+            <label>Brand Name</label>
+            <input type="text" id="fBrand" placeholder="e.g. ARCAM" oninput="schedulePreview()">
+          </div>
+          <div class="fr">
+            <label>Model Name</label>
+            <input type="text" id="fModel" placeholder="e.g. AVR5" oninput="schedulePreview()">
+          </div>
+          <div class="fr">
+            <label>Sidebar Text</label>
+            <input type="text" id="fSidebar" placeholder="e.g. AV Receiver" oninput="schedulePreview()">
+          </div>
+          <div class="fr">
+            <label>Manufacturer <span style="font-weight:400;text-transform:none;letter-spacing:0">(shown in index list)</span></label>
+            <input type="text" id="fMfr" placeholder="e.g. ARCAM · AVR">
+          </div>
+          <div class="fr full">
+            <label>Bullet Points <span style="font-weight:400;text-transform:none;letter-spacing:0">(one per line)</span></label>
+            <textarea id="fBullets" rows="5" oninput="schedulePreview()"></textarea>
+          </div>
+        </div>
+
+        <div class="sec-hdr">
+          <span class="sec-lbl">Specifications</span>
+          <button class="btn btn-ghost btn-sm" onclick="addSpec(false)">+ Add Row</button>
+        </div>
+        <div class="specs-wrap">
+          <div class="specs-hdr"><span>Property</span><span>Value</span><span></span></div>
+          <div id="specsEditor"></div>
+        </div>
+
+        <div class="row-btns">
+          <button class="btn btn-primary" onclick="saveProduct()">⬇ Save &amp; Download</button>
+          <span class="save-note" id="saveStatus"></span>
+        </div>
+      </div>
+
+      <div class="preview-wrap">
+        <div class="preview-bar">
+          <span>Live Preview</span><span>960 × 540</span>
+        </div>
+        <div class="preview-box" id="previewBox">
+          <iframe id="previewFrame"></iframe>
+        </div>
+      </div>
+    </div><!-- /editPanel -->
+
+    <!-- NEW PRODUCT PANEL -->
+    <div id="newPanel" style="display:none">
+      <div class="card">
+        <div class="card-title">New Product Slide</div>
+
+        <div style="margin-bottom:14px">
+          <label style="display:block;margin-bottom:8px">Select Brand (loads template)</label>
+          <div class="brand-btn-row">
+            <button class="brand-btn" id="nb-mk"      onclick="selectNewBrand('mk')">M&amp;K Sound</button>
+            <button class="brand-btn" id="nb-sonance"  onclick="selectNewBrand('sonance')">Sonance</button>
+            <button class="brand-btn" id="nb-wisdom"   onclick="selectNewBrand('wisdom')">Wisdom Audio</button>
+          </div>
+          <div id="tplStatus" style="font-size:11px;color:var(--muted);min-height:16px;margin-top:2px"></div>
+        </div>
+
+        <div class="fg">
+          <div class="fr">
+            <label>Filename <span style="font-weight:400;text-transform:none;letter-spacing:0">(.html — no spaces)</span></label>
+            <input type="text" id="nFilename" placeholder="e.g. new-amp.html">
+          </div>
+          <div class="fr">
+            <label>Manufacturer <span style="font-weight:400;text-transform:none;letter-spacing:0">(index label)</span></label>
+            <input type="text" id="nMfr" placeholder="e.g. ARCAM · AVR">
+          </div>
+          <div class="fr">
+            <label>Brand Name</label>
+            <input type="text" id="nfBrand" placeholder="e.g. ARCAM">
+          </div>
+          <div class="fr">
+            <label>Model Name</label>
+            <input type="text" id="nfModel" placeholder="e.g. AVR5" oninput="autoFilename(this.value)">
+          </div>
+          <div class="fr">
+            <label>Sidebar Text</label>
+            <input type="text" id="nfSidebar" placeholder="e.g. AV Receiver">
+          </div>
+          <div class="fr"><!-- spacer --></div>
+          <div class="fr full">
+            <label>Bullet Points <span style="font-weight:400;text-transform:none;letter-spacing:0">(one per line)</span></label>
+            <textarea id="nfBullets" rows="5" placeholder="Feature 1&#10;Feature 2&#10;Feature 3"></textarea>
+          </div>
+        </div>
+
+        <div class="sec-hdr">
+          <span class="sec-lbl">Specifications</span>
+          <button class="btn btn-ghost btn-sm" onclick="addSpec(true)">+ Add Row</button>
+        </div>
+        <div class="specs-wrap">
+          <div class="specs-hdr"><span>Property</span><span>Value</span><span></span></div>
+          <div id="newSpecsEditor"></div>
+        </div>
+
+        <div class="row-btns">
+          <button class="btn btn-primary" onclick="createProduct()">⬇ Create &amp; Download</button>
+          <button class="btn btn-ghost"   onclick="cancelNew()">Cancel</button>
+          <span class="save-note" id="createStatus"></span>
+        </div>
+      </div>
+    </div><!-- /newPanel -->
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<div id="toast"></div>
+
+<script>
+// ── STATE ──────────────────────────────────────────────────────────────
+let products      = [];
+let current       = { path: null, html: null, filename: null };
+let specRows      = [];
+let newSpecRows   = [];
+let newBrand      = null;
+let tplCache      = {};
+let filenameManual = false;
+let previewTimer   = null;
+
+// ── BOOT ───────────────────────────────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  loadProductList();
+  document.getElementById('nFilename').addEventListener('input', () => { filenameManual = true; });
+});
+
+async function loadProductList() {
+  try {
+    const r = await fetch('products/index.html');
+    if (!r.ok) throw new Error('Could not load product list (HTTP ' + r.status + ')');
+    const html = await r.text();
+    const doc  = new DOMParser().parseFromString(html, 'text/html');
+    products = [];
+    doc.querySelectorAll('a[href]').forEach(a => {
+      const href = a.getAttribute('href');
+      if (!href || !href.endsWith('.html')) return;
+      const small = a.parentElement?.querySelector('small');
+      let brand = 'mk';
+      if (href.includes('sonance/')) brand = 'sonance';
+      else if (href.includes('wisdom/')) brand = 'wisdom';
+      products.push({
+        model:     a.textContent.trim(),
+        mfr:       small ? small.textContent.trim() : '',
+        brand,
+        fetchPath: 'products/' + href,
+        filename:  href.split('/').pop()
+      });
+    });
+    renderSidebar(products);
+  } catch(e) {
+    document.getElementById('sbList').innerHTML =
+      `<div style="padding:16px;font-size:11px;color:#e44;line-height:1.8">${e.message}<br>
+       <span style="color:#888">Serve this tool via HTTP — not file://.<br>
+       Run: <code style="background:#f0f0f0;padding:1px 4px;border-radius:2px">python3 -m http.server 8080</code><br>
+       then open <a href="http://localhost:8080/admin-test/" style="color:var(--blue)">localhost:8080/admin-test/</a></span></div>`;
+  }
+}
+
+// ── SIDEBAR ────────────────────────────────────────────────────────────
+function renderSidebar(list) {
+  const brands = ['mk', 'sonance', 'wisdom'];
+  const names  = { mk: 'M&K Sound', sonance: 'Sonance', wisdom: 'Wisdom Audio' };
+  let html = '';
+  brands.forEach(b => {
+    const items = list.filter(p => p.brand === b);
+    if (!items.length) return;
+    html += `<div class="brand-hdr">${names[b]} (${items.length})</div>`;
+    items.forEach(p => {
+      const active = current.path === p.fetchPath ? ' active' : '';
+      html += `<div class="prod-item${active}" onclick="selectProduct(${JSON.stringify(p.fetchPath)},${JSON.stringify(p.model)},${JSON.stringify(p.filename)},${JSON.stringify(p.mfr)})">
+        <div class="prod-name">${eh(p.model)}</div>
+        <div class="prod-mfr">${eh(p.mfr)}</div>
+      </div>`;
+    });
+  });
+  document.getElementById('sbList').innerHTML = html ||
+    '<div style="padding:16px;text-align:center;color:#aaa;font-size:12px">No products found</div>';
+}
+
+function filterList(q) {
+  if (!q.trim()) { renderSidebar(products); return; }
+  const lq = q.toLowerCase();
+  renderSidebar(products.filter(p =>
+    p.model.toLowerCase().includes(lq) || p.mfr.toLowerCase().includes(lq)));
+}
+
+// ── SELECT PRODUCT ─────────────────────────────────────────────────────
+async function selectProduct(path, label, filename, mfr) {
+  try {
+    toast('Loading…', 'info');
+    const r = await fetch(path + '?t=' + Date.now());
+    if (!r.ok) throw new Error('Could not load slide');
+    const html = await r.text();
+    current = { path, html, filename };
+
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    document.getElementById('fBrand').value   = doc.getElementById('titleBrand')?.textContent.trim()  || '';
+    document.getElementById('fModel').value   = doc.getElementById('titleModel')?.textContent.trim()  || '';
+    document.getElementById('fSidebar').value = doc.querySelector('.v-text')?.textContent.trim()      || '';
+    document.getElementById('fMfr').value     = mfr || '';
+
+    const bullets = [...doc.querySelectorAll('.features-list li span[contenteditable]')]
+      .map(s => s.textContent.trim()).filter(Boolean);
+    document.getElementById('fBullets').value = bullets.join('\n');
+
+    specRows = [...doc.querySelectorAll('.specs-table tr')].map(tr => {
+      const tds = [...tr.querySelectorAll('td[contenteditable]')];
+      return { key: tds[0]?.textContent.trim() || '', val: tds[1]?.textContent.trim() || '' };
+    }).filter(s => s.key);
+    renderSpecsEditor('specsEditor', specRows, false);
+
+    document.getElementById('editTitle').textContent = label;
+    document.getElementById('editPath').textContent  = path.replace('../', '');
+    document.getElementById('saveStatus').textContent = '';
+    document.getElementById('emptyState').style.display = 'none';
+    document.getElementById('newPanel').style.display   = 'none';
+    document.getElementById('editPanel').style.display  = 'block';
+
+    renderSidebar(products);
+    refreshPreview(html, path);
+    scalePreview();
+    toast('Loaded', 'ok');
+  } catch(e) { toast(e.message, 'err'); }
+}
+
+// ── SAVE PRODUCT ───────────────────────────────────────────────────────
+function saveProduct() {
+  if (!current.html) return;
+  const updated = applyForm(current.html, false);
+  downloadHTML(updated, current.filename);
+  current.html = updated;
+  refreshPreview(updated, current.path);
+  document.getElementById('saveStatus').textContent = '✓ Downloaded — drop into products/ folder to publish';
+  toast('Downloaded: ' + current.filename, 'ok');
+}
+
+function openSlide() {
+  if (current.path) window.open(current.path, '_blank');
+}
+
+// ── NEW PRODUCT ────────────────────────────────────────────────────────
+function showNewPanel() {
+  document.getElementById('editPanel').style.display  = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('newPanel').style.display   = 'block';
+  document.getElementById('tplStatus').textContent    = '';
+  newBrand = null; newSpecRows = []; filenameManual = false;
+  ['nb-mk','nb-sonance','nb-wisdom'].forEach(id =>
+    document.getElementById(id).className = 'brand-btn');
+  ['nFilename','nMfr','nfBrand','nfModel','nfSidebar','nfBullets']
+    .forEach(id => document.getElementById(id).value = '');
+  renderSpecsEditor('newSpecsEditor', newSpecRows, true);
+}
+
+async function selectNewBrand(brand) {
+  newBrand = brand;
+  ['mk','sonance','wisdom'].forEach(b => {
+    document.getElementById('nb-' + b).className =
+      'brand-btn' + (b === brand ? ' sel-' + b : '');
+  });
+  if (tplCache[brand]) {
+    document.getElementById('tplStatus').textContent = '✓ Template ready — fill in the details below';
+    return;
+  }
+  const tpl = products.find(p => p.brand === brand);
+  if (!tpl) return toast('No template found for ' + brand, 'err');
+  document.getElementById('tplStatus').textContent = 'Loading template…';
+  try {
+    const r = await fetch(tpl.fetchPath + '?t=' + Date.now());
+    if (!r.ok) throw new Error('fetch failed');
+    tplCache[brand] = await r.text();
+    document.getElementById('tplStatus').textContent = '✓ Template ready — fill in the details below';
+  } catch(e) {
+    document.getElementById('tplStatus').textContent = '✗ Could not load template';
+  }
+}
+
+function autoFilename(model) {
+  if (filenameManual) return;
+  document.getElementById('nFilename').value =
+    model.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') + '.html';
+}
+
+function createProduct() {
+  if (!newBrand)           return toast('Select a brand first', 'err');
+  if (!tplCache[newBrand]) return toast('Select a brand to load the template', 'err');
+  const filename = document.getElementById('nFilename').value.trim();
+  const model    = document.getElementById('nfModel').value.trim();
+  if (!filename) return toast('Enter a filename', 'err');
+  if (!model)    return toast('Enter a model name', 'err');
+
+  const newHtml = applyForm(tplCache[newBrand], true, {
+    brand:   document.getElementById('nfBrand').value,
+    model,
+    sidebar: document.getElementById('nfSidebar').value,
+    bullets: document.getElementById('nfBullets').value,
+    rows:    newSpecRows
+  });
+  downloadHTML(newHtml, filename);
+  document.getElementById('createStatus').textContent =
+    '✓ Downloaded — drop into products/' + newBrand + '/ folder';
+  toast('Created: ' + filename, 'ok');
+}
+
+function cancelNew() {
+  document.getElementById('newPanel').style.display   = 'none';
+  document.getElementById('emptyState').style.display = 'flex';
+}
+
+// ── APPLY FORM → HTML (string-based, keeps all CSS & structure intact) ─
+function applyForm(html, isNew, ov) {
+  const brand   = isNew ? ov.brand   : document.getElementById('fBrand').value;
+  const model   = isNew ? ov.model   : document.getElementById('fModel').value;
+  const sidebar = isNew ? ov.sidebar : document.getElementById('fSidebar').value;
+  const bullets = isNew ? ov.bullets : document.getElementById('fBullets').value;
+  const rows    = isNew ? ov.rows    : specRows;
+
+  let out = html;
+  // Title tag
+  out = out.replace(/(<title>)[^<]*(<\/title>)/,
+    '$1' + eh(brand) + ' — ' + eh(model) + '$2');
+  // Demo label strong
+  out = out.replace(/(<p class="demo-label"[\s\S]*?<strong>)[^<]*(<\/strong>)/,
+    '$1' + eh(brand) + ' — ' + eh(model) + '$2');
+  // Brand span
+  out = out.replace(/(<span[^>]*id="titleBrand"[^>]*>)[^<]*(<\/span>)/,
+    '$1' + eh(brand) + '$2');
+  // Model span
+  out = out.replace(/(<span[^>]*id="titleModel"[^>]*>)[^<]*(<\/span>)/,
+    '$1' + eh(model) + '$2');
+  // Sidebar v-text
+  out = out.replace(/(<span[^>]*class="v-text"[^>]*>)[^<]*(<\/span>)/,
+    '$1' + eh(sidebar) + '$2');
+  // Bullets
+  const liHtml = (bullets || '').split('\n').map(l => l.trim()).filter(Boolean)
+    .map(t => '    <li><span contenteditable="true">' + eh(t) +
+              '</span><button class="bullet-del" onclick="this.closest(\'li\').remove()">×</button></li>')
+    .join('\n');
+  out = out.replace(/(<ul[^>]*id="featuresList"[^>]*>)[\s\S]*?(<\/ul>)/,
+    '$1\n' + liHtml + '\n  $2');
+  // Specs
+  const trHtml = (rows || []).filter(r => r.key)
+    .map(r => '    <tr><td contenteditable="true">' + eh(r.key) +
+              '</td><td contenteditable="true">' + eh(r.val) +
+              '</td><td class="row-del"><button onclick="this.closest(\'tr\').remove()">×</button></td></tr>')
+    .join('\n');
+  out = out.replace(/(<table[^>]*id="specsTable"[^>]*>)[\s\S]*?(<\/table>)/,
+    '$1\n' + trHtml + '\n  $2');
+  return out;
+}
+
+// ── PREVIEW ────────────────────────────────────────────────────────────
+function schedulePreview() {
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(() => {
+    if (current.html) refreshPreview(applyForm(current.html, false), current.path);
+  }, 350);
+}
+
+function refreshPreview(html, path) {
+  const dir  = path.substring(0, path.lastIndexOf('/') + 1);
+  const base = new URL(dir, window.location.href).href;
+  let preview = html
+    .replace(/<p class="demo-label"[\s\S]*?<\/p>/, '')
+    .replace(/<div class="edit-controls"[\s\S]*?<\/div>/, '')
+    .replace(/<div id="layoutPanel"[\s\S]*?<\/div>/, '')
+    .replace(/<input[^>]*type="file"[^>]*>/, '')
+    .replace(/<\/head>/, '<base href="' + base + '"></head>');
+  // ensure clean body padding
+  preview = preview.replace(/(<body[^>]*?)>/, (m, tag) => {
+    return tag.replace(/style="[^"]*"/, '') + ' style="margin:0;padding:0">';
+  });
+  document.getElementById('previewFrame').srcdoc = preview;
+}
+
+function scalePreview() {
+  const box   = document.getElementById('previewBox');
+  const frame = document.getElementById('previewFrame');
+  const scale = box.clientWidth / 960;
+  frame.style.transform = 'scale(' + scale + ')';
+  box.style.height = Math.round(540 * scale) + 'px';
+}
+window.addEventListener('resize', () => { if (current.html) scalePreview(); });
+
+// ── SPECS EDITOR ───────────────────────────────────────────────────────
+function renderSpecsEditor(containerId, rows, isNew) {
+  const arr = isNew ? newSpecRows : specRows;
+  document.getElementById(containerId).innerHTML = arr.map((r, i) => {
+    const ref    = isNew ? 'newSpecRows' : 'specRows';
+    const sched  = isNew ? '' : ';schedulePreview()';
+    return `<div class="spec-row">
+      <input type="text" value="${eh(r.key)}" placeholder="Property"
+        oninput="${ref}[${i}].key=this.value${sched}">
+      <input type="text" value="${eh(r.val)}" placeholder="Value"
+        oninput="${ref}[${i}].val=this.value${sched}">
+      <button class="spec-del" onclick="removeSpec(${i},${isNew})" title="Remove row">×</button>
+    </div>`;
+  }).join('');
+}
+
+function addSpec(isNew) {
+  if (isNew) { newSpecRows.push({ key: '', val: '' }); renderSpecsEditor('newSpecsEditor', newSpecRows, true); }
+  else       { specRows.push({ key: '', val: '' });    renderSpecsEditor('specsEditor', specRows, false); }
+  const id  = isNew ? 'newSpecsEditor' : 'specsEditor';
+  const inp = document.querySelectorAll('#' + id + ' .spec-row:last-child input');
+  if (inp[0]) inp[0].focus();
+}
+
+function removeSpec(i, isNew) {
+  if (isNew) { newSpecRows.splice(i, 1); renderSpecsEditor('newSpecsEditor', newSpecRows, true); }
+  else       { specRows.splice(i, 1);    renderSpecsEditor('specsEditor', specRows, false); schedulePreview(); }
+}
+
+// ── DOWNLOAD ───────────────────────────────────────────────────────────
+function downloadHTML(html, filename) {
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a); a.click();
+  document.body.removeChild(a);
+  setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+// ── HELPERS ────────────────────────────────────────────────────────────
+function eh(s)  { return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function toast(msg, type) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = 'show ' + (type || 'ok');
+  clearTimeout(t._t); t._t = setTimeout(() => t.className = '', 3000);
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>WISDOM — Cover</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: #111;
+    font-family: 'Montserrat', sans-serif;
+    padding: 40px;
+    display: flex; flex-direction: column;
+    align-items: center; gap: 24px;
+  }
+  .demo-label { color: #777; font-size: 11px; letter-spacing: 1px; text-align: center; line-height: 1.9; }
+  .demo-label strong { color: #ccc; }
+
+  /* SLIDE 960x540 */
+  .slide {
+    position: relative; width: 960px; height: 540px;
+    overflow: hidden; flex-shrink: 0;
+    background: linear-gradient(to bottom, #351864 0%, #1B162B 75%);
+  }
+
+  /* ACCENT BAR */
+  .accent-bar {
+    position: absolute; left: 396px; top: 320px;
+    width: 168px; height: 4px; background: #ffffff;
+  }
+
+  /* LOGO */
+  .logo { position: absolute; left: 885px; top: 31px; width: 41px; height: 25px; filter: brightness(0) invert(1); opacity: 0.45; object-fit: contain; }
+
+  /* COVER TITLE */
+  .slide-title {
+    position: absolute; left: 240px; top: 180px; width: 480px;
+    text-align: center;
+  }
+  .title-line {
+    display: block;
+    font-size: 56px; font-weight: 700; color: #fff;
+    letter-spacing: 8px; text-transform: uppercase; line-height: 1.15;
+  }
+  .title-line.thin { font-weight: 300; color: rgba(255,255,255,0.6); }
+
+  [contenteditable] { outline: none; }
+
+  /* LAYOUT EDITOR */
+  .slide.layout-mode [data-movable] {
+    outline: 1px dashed rgba(255,180,0,0.35);
+    cursor: move;
+  }
+  .slide.layout-mode [data-movable]:hover {
+    outline: 1px dashed rgba(255,180,0,0.8);
+  }
+  .slide.layout-mode [data-movable].selected {
+    outline: 2px solid #ff9600 !important;
+    z-index: 50;
+  }
+  #resizeCorner {
+    display: none; position: absolute;
+    width: 12px; height: 12px;
+    background: #ff9600; border: 2px solid #fff;
+    border-radius: 2px; cursor: se-resize; z-index: 200;
+  }
+  #uploadOverlay {
+    display: none; position: absolute;
+    background: rgba(0,0,0,0.65); color: #ff9600;
+    font-size: 9px; font-weight: 600; letter-spacing: 1px;
+    text-align: center; cursor: pointer; z-index: 150;
+    align-items: center; justify-content: center;
+    flex-direction: column; gap: 4px;
+    border: 2px dashed #ff9600;
+  }
+  #uploadOverlay.visible { display: flex; }
+  #uploadOverlay:hover { background: rgba(0,0,0,0.8); }
+
+  #layoutPanel {
+    display: none; background: #1a1400; border: 1px solid #553300;
+    border-radius: 6px; padding: 10px 16px;
+    font-size: 10px; color: #ff9600; letter-spacing: 0.5px;
+    gap: 12px; align-items: center; flex-wrap: wrap;
+  }
+  #layoutPanel.visible { display: flex; }
+  #layoutPanel strong { color: #ffb84d; }
+  #coordsDisplay { font-family: monospace; color: #ffd080; }
+  #layoutPanel .lp-btn {
+    padding: 4px 10px; border-radius: 4px; font-size: 9px;
+    font-family: 'Montserrat', sans-serif; font-weight: 600;
+    letter-spacing: 1px; text-transform: uppercase; cursor: pointer; border: none;
+  }
+  .lp-upload { background: #332200; color: #ff9600; border: 1px solid #664400 !important; }
+  .lp-copy   { background: #1a2a1a; color: #6fdc8c; border: 1px solid #2a4a2a !important; }
+
+  .edit-controls { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .btn { padding: 9px 22px; border-radius: 6px; font-family: 'Montserrat', sans-serif; font-size: 10px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; border: none; transition: opacity 0.2s; }
+  .btn:hover { opacity: 0.8; }
+  .btn-primary { background: #5b2aa8; color: #fff; }
+  .btn-outline  { background: transparent; border: 1px solid #444; color: #888; }
+  .btn-add      { background: #1a472a; color: #6fdc8c; border: 1px solid #2d6a40; }
+  .btn-layout   { background: #1a1200; color: #ff9600; border: 1px solid #553300; }
+  .btn-layout.on { background: #332200; color: #ffb84d; border-color: #ff9600; }
+
+  @media print {
+    @page { size: 960px 540px; margin: 0; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body { padding: 0 !important; margin: 0 !important; background: #000 !important; display: block !important; }
+    .demo-label, .edit-controls, #layoutPanel, input[type="file"] { display: none !important; }
+    .bullet-del, .edit-hint, .row-del { display: none !important; }
+    .slide { margin: 0 !important; }
+    .specs-table td { border-bottom: 0.25px dashed rgba(255,255,255,0.25) !important; }
+    .specs-table td:first-child { border-right: 0.25px dashed rgba(255,255,255,0.25) !important; }
+  }
+</style>
+</head>
+<body>
+
+<p class="demo-label">
+  <strong>Habitech — Cover Slide</strong><br>
+  Toggle Edit Layout to drag elements · Copy All CSS to capture positions
+</p>
+
+<div class="slide" id="slide">
+  <div class="accent-bar" id="accentBar" data-movable data-type="shape" data-label="Accent Bar"></div>
+  <img class="logo" id="logoImg" data-movable data-type="image" data-label="Logo" src="../../assets/wisdom-logo-slide.png" alt="Habitech">
+
+  <div class="slide-title" id="slideTitle" data-movable data-type="block" data-label="Title">
+    <span class="title-line">CINEMA</span>
+    <span class="title-line thin">/</span>
+    <span class="title-line">DESIGN</span>
+    <span class="title-line thin">/</span>
+    <span class="title-line">PROPOSAL</span>
+  </div>
+
+  <div id="resizeCorner"></div>
+  <div id="uploadOverlay">&#128193;<span>Click to upload image</span></div>
+</div>
+
+<!-- Layout info panel -->
+<div id="layoutPanel">
+  <strong id="labelDisplay">–</strong>
+  <span id="coordsDisplay">–</span>
+  <span id="textControls" style="display:none; gap:8px; align-items:center; flex-wrap:wrap;"></span>
+  <button class="lp-btn lp-upload" id="uploadBtn" style="display:none" onclick="triggerUpload()">&#128193; Upload Image</button>
+  <button class="lp-btn lp-copy" onclick="copyAllCSS()">&#128203; Copy All CSS</button>
+</div>
+
+<div class="edit-controls">
+  <button class="btn btn-add" onclick="addTextBlock()">+ Add Text Block</button>
+  <button class="btn btn-layout" id="layoutBtn" onclick="toggleLayoutMode()">&#10170; Edit Layout</button>
+  <button class="btn btn-add" onclick="copyAllCSS()">&#128203; Copy All CSS</button>
+  <button class="btn btn-outline" onclick="window.print()">Export as PDF</button>
+</div>
+
+<input type="file" id="fileInput" accept="image/*" style="display:none">
+
+<script>
+  function addTextBlock() {
+    const slide = document.getElementById('slide');
+    const div = document.createElement('div');
+    div.setAttribute('data-movable', '');
+    div.setAttribute('data-type', 'block');
+    div.setAttribute('data-label', 'Text Block');
+    div.setAttribute('contenteditable', 'true');
+    div.style.cssText = 'position:absolute;left:60px;top:200px;width:300px;font-size:10px;font-weight:400;color:rgba(255,255,255,0.7);line-height:1.9;letter-spacing:0.3px;outline:none;';
+    div.textContent = 'New text block';
+    slide.appendChild(div);
+  }
+
+  /* LAYOUT EDITOR */
+  const slide       = document.getElementById('slide');
+  const corner      = document.getElementById('resizeCorner');
+  const uploadOvl   = document.getElementById('uploadOverlay');
+  const panel       = document.getElementById('layoutPanel');
+  const labelDisp   = document.getElementById('labelDisplay');
+  const coordsDisp  = document.getElementById('coordsDisplay');
+  const uploadBtn   = document.getElementById('uploadBtn');
+  const layoutBtn   = document.getElementById('layoutBtn');
+  const fileInput   = document.getElementById('fileInput');
+  const textControls = document.getElementById('textControls');
+
+  let layoutMode = false;
+  let selected   = null;
+  let dragging   = false;
+  let resizing   = false;
+  let ox = 0, oy = 0, rox = 0, roy = 0, rw0 = 0, rh0 = 0;
+
+  const iStyle = 'width:44px;padding:2px 5px;background:#222;color:#ffd080;border:1px solid #555;border-radius:3px;font-size:10px;font-family:monospace;';
+  const lbl    = t => `<span style="color:#aaa;font-size:9px">${t}</span>`;
+
+  function buildTextControls(el) {
+    textControls.innerHTML = '';
+    textControls.style.display = 'none';
+    if (!el) return;
+
+    if (el.dataset.label === 'Title') {
+      const lines = el.querySelectorAll('.title-line');
+      const sz = lines.length ? Math.round(parseFloat(getComputedStyle(lines[0]).fontSize)) : 56;
+      textControls.innerHTML = `${lbl('Size')} <input id="tc_sz" type="number" value="${sz}" min="8" max="100" style="${iStyle}"> ${lbl('px')}`;
+      textControls.style.display = 'flex';
+      textControls.querySelector('#tc_sz').oninput = e => lines.forEach(l => l.style.fontSize = e.target.value + 'px');
+
+    } else if (el.dataset.label === 'Logo') {
+      const sz = Math.round(el.offsetWidth);
+      const op = Math.round(parseFloat(window.getComputedStyle(el).opacity) * 100);
+      textControls.innerHTML = `${lbl('Width')} <input id="tc_lw" type="number" value="${sz}" min="10" max="200" style="${iStyle}"> ${lbl('px')} &nbsp; ${lbl('Opacity')} <input id="tc_op" type="range" value="${op}" min="0" max="100" style="width:70px;accent-color:#ff9600;vertical-align:middle"> <span id="tc_op_val" style="color:#ffd080;font-size:9px;font-family:monospace;min-width:28px">${op}%</span>`;
+      textControls.style.display = 'flex';
+      textControls.querySelector('#tc_lw').oninput = e => { el.style.width = e.target.value + 'px'; refreshInfo(el); };
+      textControls.querySelector('#tc_op').oninput = e => { el.style.opacity = e.target.value / 100; document.getElementById('tc_op_val').textContent = e.target.value + '%'; };
+
+    } else if (el.dataset.label === 'Body Text') {
+      const sz = Math.round(parseFloat(getComputedStyle(el).fontSize));
+      const op = Math.round(parseFloat(window.getComputedStyle(el).opacity) * 100);
+      textControls.innerHTML = `${lbl('Size')} <input id="tc_sz" type="number" value="${sz}" min="6" max="24" style="${iStyle}"> ${lbl('px')} &nbsp; ${lbl('Opacity')} <input id="tc_op" type="range" value="${op}" min="0" max="100" style="width:70px;accent-color:#ff9600;vertical-align:middle"> <span id="tc_op_val" style="color:#ffd080;font-size:9px;font-family:monospace;min-width:28px">${op}%</span>`;
+      textControls.style.display = 'flex';
+      textControls.querySelector('#tc_sz').oninput = e => { el.style.fontSize = e.target.value + 'px'; };
+      textControls.querySelector('#tc_op').oninput = e => { el.style.opacity = e.target.value / 100; document.getElementById('tc_op_val').textContent = e.target.value + '%'; };
+
+    } else if (el.dataset.label === 'Main Image' || el.dataset.label === 'Secondary Image') {
+      const sz = Math.round(el.offsetWidth);
+      const op = Math.round(parseFloat(window.getComputedStyle(el).opacity) * 100);
+      textControls.innerHTML = `${lbl('Width')} <input id="tc_lw" type="number" value="${sz}" min="10" max="960" style="${iStyle}"> ${lbl('px')} &nbsp; ${lbl('Opacity')} <input id="tc_op" type="range" value="${op}" min="0" max="100" style="width:70px;accent-color:#ff9600;vertical-align:middle"> <span id="tc_op_val" style="color:#ffd080;font-size:9px;font-family:monospace;min-width:28px">${op}%</span>`;
+      textControls.style.display = 'flex';
+      textControls.querySelector('#tc_lw').oninput = e => { el.style.width = e.target.value + 'px'; refreshInfo(el); };
+      textControls.querySelector('#tc_op').oninput = e => { el.style.opacity = e.target.value / 100; document.getElementById('tc_op_val').textContent = e.target.value + '%'; };
+    }
+  }
+
+  function getPos(el) {
+    const r = el.getBoundingClientRect();
+    const sr = slide.getBoundingClientRect();
+    return { l: Math.round(r.left - sr.left), t: Math.round(r.top - sr.top) };
+  }
+  function getSize(el) {
+    return { w: Math.round(el.offsetWidth), h: Math.round(el.offsetHeight) };
+  }
+
+  function refreshInfo(el) {
+    if (!el) return;
+    const p = getPos(el), s = getSize(el);
+    labelDisp.textContent = el.dataset.label;
+    coordsDisp.textContent = `left: ${p.l}px  ·  top: ${p.t}px  ·  w: ${s.w}px  ·  h: ${s.h}px`;
+    corner.style.left = (p.l + s.w - 6) + 'px';
+    corner.style.top  = (p.t + s.h - 6) + 'px';
+    const isImg = el.dataset.type === 'image';
+    uploadBtn.style.display = isImg ? '' : 'none';
+    if (isImg) {
+      uploadOvl.style.left   = p.l + 'px';
+      uploadOvl.style.top    = p.t + 'px';
+      uploadOvl.style.width  = s.w + 'px';
+      uploadOvl.style.height = s.h + 'px';
+    }
+  }
+
+  function selectElement(el) {
+    if (selected) {
+      selected.classList.remove('selected');
+      corner.style.display = 'none';
+    }
+    selected = el;
+    if (!el) { panel.classList.remove('visible'); buildTextControls(null); return; }
+    if (el.style.right) {
+      const p = getPos(el);
+      el.style.left  = p.l + 'px';
+      el.style.top   = p.t + 'px';
+      el.style.right = '';
+    }
+    el.classList.add('selected');
+    const canResize = (el.dataset.type === 'image' || el.dataset.type === 'shape');
+    corner.style.display = canResize ? 'block' : 'none';
+    panel.classList.add('visible');
+    refreshInfo(el);
+    buildTextControls(el);
+  }
+
+  function toggleLayoutMode() {
+    layoutMode = !layoutMode;
+    slide.classList.toggle('layout-mode', layoutMode);
+    layoutBtn.classList.toggle('on', layoutMode);
+    layoutBtn.textContent = layoutMode ? '✓ Done Editing' : '⤢ Edit Layout';
+    if (!layoutMode) { selectElement(null); corner.style.display = 'none'; }
+  }
+
+  slide.addEventListener('click', e => {
+    if (!layoutMode) return;
+    const el = e.target.closest('[data-movable]');
+    if (!el) selectElement(null);
+  });
+
+  slide.addEventListener('mousedown', e => {
+    if (!layoutMode) return;
+    if (e.target.contentEditable === 'true') return;
+    const el = e.target.closest('[data-movable]');
+    if (!el) return;
+    if (el !== selected) selectElement(el);
+    dragging = true;
+    const p = getPos(el);
+    ox = e.clientX - p.l;
+    oy = e.clientY - p.t;
+    e.preventDefault();
+  });
+
+  corner.addEventListener('mousedown', e => {
+    if (!layoutMode || !selected) return;
+    resizing = true;
+    rox = e.clientX; roy = e.clientY;
+    rw0 = selected.offsetWidth; rh0 = selected.offsetHeight;
+    e.preventDefault(); e.stopPropagation();
+  });
+
+  document.addEventListener('mousemove', e => {
+    if (dragging && selected) {
+      selected.style.left = (e.clientX - ox) + 'px';
+      selected.style.top  = (e.clientY - oy) + 'px';
+      refreshInfo(selected);
+    }
+    if (resizing && selected) {
+      selected.style.width  = Math.max(10, rw0 + (e.clientX - rox)) + 'px';
+      selected.style.height = Math.max(4,  rh0 + (e.clientY - roy)) + 'px';
+      refreshInfo(selected);
+    }
+  });
+
+  document.addEventListener('mouseup', () => { dragging = false; resizing = false; });
+
+  function triggerUpload() { fileInput.click(); }
+  fileInput.addEventListener('change', e => {
+    const file = e.target.files[0];
+    if (!file || !selected || selected.tagName !== 'IMG') return;
+    const url = URL.createObjectURL(file);
+    selected.src = url;
+    fileInput.value = '';
+    setTimeout(() => refreshInfo(selected), 100);
+  });
+  uploadOvl.addEventListener('click', triggerUpload);
+
+  function copyAllCSS() {
+    const items = slide.querySelectorAll('[data-movable]');
+    let out = '/* Layout positions */\n';
+    items.forEach(el => {
+      const p = getPos(el), s = getSize(el);
+      let extra = '';
+      const op = parseFloat(window.getComputedStyle(el).opacity);
+      if (op < 0.999) extra += `; opacity: ${Math.round(op * 100)}%`;
+      if (el.tagName === 'IMG' && el.src && el.src.includes('/')) {
+        const fname = el.src.split('/').pop();
+        if (fname) extra += `; file: ${fname}`;
+      }
+      out += `/* ${el.dataset.label} */\n  left: ${p.l}px; top: ${p.t}px; width: ${s.w}px; height: ${s.h}px${extra};\n\n`;
+    });
+    navigator.clipboard.writeText(out).then(() => {
+      const btn = event.target;
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy All CSS', 1500);
+    });
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,960 @@
+[
+  {
+    "model": "ICS7a",
+    "category": "In Ceiling Speakers",
+    "features": [
+      "In-ceiling speaker",
+      "Highly detailed and dynamic",
+      "Planar Magnetic driver (PMD)",
+      "Superb on and off axis coverage",
+      "Point source design",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Tweeter/Midrange",
+        "Planar Magnetic Driver"
+      ],
+      [
+        "Woofer",
+        "2 x High output racetrack woofer"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "57Hz – 20kHz +/- 3 -6dB at 50Hz"
+      ],
+      [
+        "Impedance",
+        "4.5Ω"
+      ],
+      [
+        "Power Handling",
+        "300w"
+      ],
+      [
+        "Sensitivity",
+        "87dB SPL  (1m)"
+      ],
+      [
+        "Dimensions (Diameter x D)",
+        "290 x 164 mm (Cut Out 259 mm)"
+      ]
+    ],
+    "image_file": "image10.png",
+    "slide_idx": 7,
+    "slug": "ics7a",
+    "filename": "ics7a.html"
+  },
+  {
+    "model": "ICI6",
+    "category": "In Ceiling Speakers",
+    "features": [
+      "In-ceiling speaker",
+      "Highly detailed and dynamic",
+      "Planar Magnetic driver",
+      "Superb on and off axis coverage",
+      "Point source design",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Tweeter/Midrange",
+        "Planar Magnetic Driver"
+      ],
+      [
+        "Coverage Angle (-6 dB)",
+        "150° (based on 40° being the reference axis)"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "48Hz – 20kHz +/- 3"
+      ],
+      [
+        "Impedance",
+        "8Ω"
+      ],
+      [
+        "Power Handling",
+        "100w"
+      ],
+      [
+        "Sensitivity",
+        "82dB SPL  (1m)"
+      ],
+      [
+        "Dimensions (Diameter x Depth)",
+        "222.1 x 149 mm (Cut Out 195 mm) (Round or Square Grille)"
+      ]
+    ],
+    "image_file": "image11.png",
+    "slide_idx": 8,
+    "slug": "ici6",
+    "filename": "ici6.html"
+  },
+  {
+    "model": "P7M",
+    "category": "LCR Speakers",
+    "features": [
+      "All metal construction",
+      "Custom lengths from a minimum width of 1433mm / 56.4” and a maximum width of 1788mm /  70.4”",
+      "Highly detailed and dynamic sound covering 4 octaves of clarity",
+      "Provides three spherical planar magnetic drivers for the high frequencies down to an amazing 900Hz",
+      "Four 4.5″ woofers deliver low frequency heavy lifting.",
+      "Requires three channels of amplification"
+    ],
+    "specs": [
+      [
+        "Woofer",
+        "4 x 4.5”"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "80Hz to 20kHz (+/- 3dB)"
+      ],
+      [
+        "Impedance",
+        "Centre Channel: 4Ω Left and Right Channels: 8Ω"
+      ],
+      [
+        "Required Amplifier Channels",
+        "3 left, centre and right"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "75 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "80dB 2.83V @ 1m"
+      ],
+      [
+        "Dimensions",
+        "Height: 184mm | Width: Min: 1433mm | To Max: 1788mm  Depth with optional wall mount: 97.8mm ; Depth with optional VESA TV Mount: 92.1mm"
+      ]
+    ],
+    "image_file": "image12.png",
+    "slide_idx": 9,
+    "slug": "p7m",
+    "filename": "p7m.html"
+  },
+  {
+    "model": "P9M",
+    "category": "LCR Speakers",
+    "features": [
+      "All metal construction",
+      "Custom lengths from a minimum width of 1433mm / 56.4” and a maximum width of 1788mm /  70.4”",
+      "Highly detailed and dynamic sound covering 4 octaves of clarity",
+      "Provides three spherical planar magnetic drivers for the high frequencies down to an amazing 900Hz",
+      "Four 4.5″ woofers deliver low frequency heavy lifting.",
+      "Requires three channels of amplification"
+    ],
+    "specs": [
+      [
+        "Woofer",
+        "4 x 4.5”"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "80Hz to 20kHz (+/- 3dB)"
+      ],
+      [
+        "Impedance",
+        "Centre Channel: 4Ω Left and Right Channels: 8Ω"
+      ],
+      [
+        "Required Amplifier Channels",
+        "3 left, centre and right"
+      ],
+      [
+        "Recommended Amplifier Power",
+        "75 to 200W"
+      ],
+      [
+        "Sensitivity",
+        "80dB 2.83V @ 1m"
+      ],
+      [
+        "Dimensions",
+        "Height: 184mm | Width: Min: 1433mm | To Max: 1788mm  Depth with optional wall mount: 97.8mm ; Depth with optional VESA TV Mount: 92.1mm"
+      ]
+    ],
+    "image_file": "image13.png",
+    "slide_idx": 10,
+    "slug": "p9m",
+    "filename": "p9m.html"
+  },
+  {
+    "model": "P2M",
+    "category": "LCR and Surround  Speakers",
+    "features": [
+      "On wall design",
+      "Black or white high gloss finish",
+      "Highly detailed and dynamic",
+      "Planar Magnetic driver",
+      "Superb on and off axis coverage",
+      "Point source design",
+      "Can be mounted vertically or horizontally",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Tweeter/Midrange",
+        "Planar Magnetic Driver"
+      ],
+      [
+        "Woofer",
+        "1 x High output 5\" woofer"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "70hz – 20khz (+- 2db)"
+      ],
+      [
+        "Impedance",
+        "8Ω"
+      ],
+      [
+        "Power Handling",
+        "200w"
+      ],
+      [
+        "Sensitivity",
+        "87dB SPL  (1m)"
+      ],
+      [
+        "Dimensions (W x H x D)",
+        "422 x 205 x 105 mm"
+      ]
+    ],
+    "image_file": "image15.png",
+    "slide_idx": 11,
+    "slug": "p2m",
+    "filename": "p2m.html"
+  },
+  {
+    "model": "P4M",
+    "category": "LCR and Surround  Speakers",
+    "features": [
+      "On wall design",
+      "Black or white high gloss finish",
+      "Highly detailed and dynamic",
+      "Planar Magnetic driver",
+      "Superb on and off axis coverage",
+      "Point source design",
+      "Can be mounted vertically or horizontally",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Tweeter/Midrange",
+        "Planar Magnetic Driver"
+      ],
+      [
+        "Woofer",
+        "2 x High output 5\" woofer"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "50hz – 20khz (+/- 2db)"
+      ],
+      [
+        "Impedance",
+        "6Ω"
+      ],
+      [
+        "Power Handling",
+        "200w"
+      ],
+      [
+        "Sensitivity",
+        "89dB SPL  (1m)"
+      ],
+      [
+        "Dimensions (W x H x D)",
+        "842 x 205 x 105 mm"
+      ]
+    ],
+    "image_file": "image16.png",
+    "slide_idx": 12,
+    "slug": "p4m",
+    "filename": "p4m.html"
+  },
+  {
+    "model": "P2i",
+    "category": "LCR and Surround  Speakers",
+    "features": [
+      "In wall/ceiling speaker",
+      "Highly detailed and dynamic",
+      "Planar Magnetic driver",
+      "Superb on and off axis coverage",
+      "Point source design",
+      "Can be mounted vertically or horizontally",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Tweeter/Midrange",
+        "Planar Magnetic Driver"
+      ],
+      [
+        "Woofer",
+        "2 x High output racetrack woofer"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "80hz – 20khz (+- 2db)"
+      ],
+      [
+        "Impedance",
+        "4Ω"
+      ],
+      [
+        "Power Handling",
+        "140w"
+      ],
+      [
+        "Sensitivity",
+        "86dB SPL  (1m)"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "494 x 137 x 87 mm (Cut Out 259 mm)"
+      ]
+    ],
+    "image_file": "image17.png",
+    "slide_idx": 13,
+    "slug": "p2i",
+    "filename": "p2i.html"
+  },
+  {
+    "model": "P4i",
+    "category": "LCR and Surround  Speakers",
+    "features": [
+      "In wall/ceiling speaker",
+      "Highly detailed and dynamic",
+      "Planar Magnetic driver",
+      "Superb on and off axis coverage",
+      "Point source design",
+      "Can be mounted vertically or horizontally",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Tweeter/Midrange",
+        "Planar Magnetic Driver"
+      ],
+      [
+        "Woofer",
+        "4 x High output racetrack woofer"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "80hz – 20khz (+/- 2db)"
+      ],
+      [
+        "Impedance",
+        "6Ω"
+      ],
+      [
+        "Power Handling",
+        "280w"
+      ],
+      [
+        "Sensitivity",
+        "86dB SPL  (1m)"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "799 x 137 x 87 mm"
+      ]
+    ],
+    "image_file": "image18.png",
+    "slide_idx": 14,
+    "slug": "p4i",
+    "filename": "p4i.html"
+  },
+  {
+    "model": "P6i",
+    "category": "LCR and Surround  Speakers",
+    "features": [
+      "In wall speaker",
+      "Highly detailed and dynamic",
+      "Planar Magnetic driver",
+      "Superb on and off axis coverage",
+      "Point source design",
+      "Can be mounted vertically or horizontally",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Tweeter/Midrange",
+        "Planar Magnetic Driver"
+      ],
+      [
+        "Woofer",
+        "6 x High output racetrack woofer"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "80hz – 20khz (+/- 2db)"
+      ],
+      [
+        "Impedance",
+        "4Ω"
+      ],
+      [
+        "Power Handling",
+        "400w"
+      ],
+      [
+        "Sensitivity",
+        "90dB SPL  (1m)"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "1310 x 137 x 87 mm"
+      ]
+    ],
+    "image_file": "image19.png",
+    "slide_idx": 15,
+    "slug": "p6i",
+    "filename": "p6i.html"
+  },
+  {
+    "model": "L8i",
+    "category": "LCR and Surround  Speakers",
+    "features": [
+      "In wall speaker",
+      "Highly detailed and dynamic",
+      "Planar Magnetic driver",
+      "Superb on and off axis coverage",
+      "Line source design",
+      "Can only be mounted vertically",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Tweeter/Midrange",
+        "Planar Magnetic Driver"
+      ],
+      [
+        "Woofer",
+        "8 x High output racetrack woofer"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "80hz – 20khz (+/- 2db)"
+      ],
+      [
+        "Impedance",
+        "4Ω"
+      ],
+      [
+        "Power Handling",
+        "400w"
+      ],
+      [
+        "Sensitivity",
+        "91dB SPL  (1m)"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "1310 x 212 x 96 mm"
+      ]
+    ],
+    "image_file": "image20.png",
+    "slide_idx": 16,
+    "slug": "l8i",
+    "filename": "l8i.html"
+  },
+  {
+    "model": "Sage Line 2 & 3",
+    "category": "LCR and Surround  Speakers",
+    "features": [
+      "In baffle wall or on wall speaker",
+      "Line Source technology",
+      "Planar Magnetic drivers",
+      "Enhanced clarity and power over distance",
+      "Covers 6 octaves of clarity",
+      "Full range",
+      "2 x channels of amplification required"
+    ],
+    "specs": [
+      [
+        "Tweeter/Midrange",
+        "Planar Magnetic Driver"
+      ],
+      [
+        "Woofer",
+        "6 or 9 x High output woofers"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "60hz – 20khz (+/- 2db)"
+      ],
+      [
+        "Impedance",
+        "6Ω"
+      ],
+      [
+        "Power Handling",
+        "Line 2: 375w  Line 3: 750w"
+      ],
+      [
+        "Sensitivity",
+        "95dB SPL  (1m)"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "Line 2: 1295 x 356 x 133 mm   Line 3: 1943 x 356 x 133 mm"
+      ]
+    ],
+    "image_file": "image21.png",
+    "slide_idx": 17,
+    "slug": "sage-line-2-3",
+    "filename": "sage-line-2-3.html"
+  },
+  {
+    "model": "Sage Point 2 V2",
+    "category": "LCR and Surround  Speakers",
+    "features": [
+      "On wall, in wall or in ceiling speaker",
+      "Highly detailed and dynamic",
+      "MTM Planar Magnetic driver",
+      "Covers 5 octaves of clarity",
+      "2 10” woofers",
+      "Can be mounted vertically or horizontally",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Tweeter/Midrange",
+        "MTM Planar Magnetic Driver"
+      ],
+      [
+        "Woofer",
+        "1 x High output 10” woofers"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "60hz – 20khz (+/- 2db)"
+      ],
+      [
+        "Impedance",
+        "4Ω"
+      ],
+      [
+        "Power Handling",
+        "200w"
+      ],
+      [
+        "Sensitivity",
+        "87dB SPL  (1m)"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "568 x 279 x 140 mm"
+      ]
+    ],
+    "image_file": "image22.png",
+    "slide_idx": 18,
+    "slug": "sage-point-2-v2",
+    "filename": "sage-point-2-v2.html"
+  },
+  {
+    "model": "Sage Point 3 GT",
+    "category": "LCR and Surround  Speakers",
+    "features": [
+      "On wall, in wall or in ceiling speaker",
+      "Highly detailed and dynamic",
+      "MTM Planar Magnetic driver",
+      "Covers 5 octaves of clarity",
+      "2 10” woofers",
+      "Can be mounted vertically or horizontally",
+      "1 x channel of amplification required"
+    ],
+    "specs": [
+      [
+        "Tweeter/Midrange",
+        "MTM Planar Magnetic Driver"
+      ],
+      [
+        "Woofer",
+        "2 x High output 10” woofer"
+      ],
+      [
+        "Freq. Response(using minimum air volume spec)",
+        "60hz – 20khz (+/- 2db)"
+      ],
+      [
+        "Impedance",
+        "6Ω"
+      ],
+      [
+        "Power Handling",
+        "375w"
+      ],
+      [
+        "Sensitivity",
+        "90dB SPL  (1m)"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "889 x 317.5 x 158.8 mm"
+      ]
+    ],
+    "image_file": "image23.png",
+    "slide_idx": 19,
+    "slug": "sage-point-3-gt",
+    "filename": "sage-point-3-gt.html"
+  },
+  {
+    "model": "S10",
+    "category": "Subwoofer",
+    "features": [
+      "Freestanding design",
+      "Highly detailed and dynamically accurate",
+      "High output 10\" woofer",
+      "Sealed enclosure with a high gloss finish",
+      "Multiple placement options, upright, down-firing, up-firing",
+      "1x channel of amplification"
+    ],
+    "specs": [
+      [
+        "Woofer",
+        "1 x high-output 10\" woofer"
+      ],
+      [
+        "Freq. Response",
+        "35hz – 80hz +/- 3db"
+      ],
+      [
+        "Impedance",
+        "8Ω"
+      ],
+      [
+        "Power Handling",
+        "370w"
+      ],
+      [
+        "Sensitivity",
+        "89dB @ 1m"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "390 x 390 x 116 mm"
+      ],
+      [
+        "Speaker Height",
+        "406 mm inc feet154 mm down/up-firing inc feet"
+      ]
+    ],
+    "image_file": "image24.png",
+    "slide_idx": 20,
+    "slug": "s10",
+    "filename": "s10.html"
+  },
+  {
+    "model": "S57i",
+    "category": "Subwoofer",
+    "features": [
+      "In wall or in ceiling design – only 4” deep",
+      "Regenerative transmission line technology",
+      "Highly detailed and dynamically accurate",
+      "Flat frequency response  across a 25Hz to 130Hz operating range",
+      "High sensitivity, high output and low distortion",
+      "One channel of amplification required",
+      "Requires SW-1 DSP amplifier"
+    ],
+    "specs": [
+      [
+        "Woofer",
+        "1 x high-output 10\" woofer"
+      ],
+      [
+        "Freq. Response",
+        "25Hz – 130Hz +/- 3db"
+      ],
+      [
+        "Impedance",
+        "8Ω"
+      ],
+      [
+        "Power Handling",
+        "500w"
+      ],
+      [
+        "Sensitivity",
+        "84dB @ 1m"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "1353 x 406 x 105 mm"
+      ]
+    ],
+    "image_file": "image25.png",
+    "slide_idx": 21,
+    "slug": "s57i",
+    "filename": "s57i.html"
+  },
+  {
+    "model": "SAS RTL",
+    "category": "Subwoofer",
+    "features": [
+      "Freestanding or in wall/cabinetry",
+      "Regenerative transmission line technology",
+      "Highly detailed and dynamically accurate",
+      "Custom designed long throw high-output single 5 x 7\" woofer",
+      "Multi-port design allows for flexibility in room placement",
+      "Max SPL – 115db @ 30hz",
+      "Requires SW-1 amplifier with DSP"
+    ],
+    "specs": [
+      [
+        "Woofer",
+        "1 x high-output racetrack woofer"
+      ],
+      [
+        "Freq. Response",
+        "30hz – 80hz +/- 3db"
+      ],
+      [
+        "Impedance",
+        "8Ω"
+      ],
+      [
+        "Power Handling",
+        "450w"
+      ],
+      [
+        "Sensitivity",
+        "90dB @ 1m"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "457 x 686 x 178 mm"
+      ]
+    ],
+    "image_file": "image26.png",
+    "slide_idx": 22,
+    "slug": "sas-rtl",
+    "filename": "sas-rtl.html"
+  },
+  {
+    "model": "SCS-2 RTL",
+    "category": "Subwoofer",
+    "features": [
+      "Freestanding or in wall/cabinetry",
+      "Regenerative transmission line technology",
+      "Highly detailed and dynamically accurate",
+      "Multi-port design allows installation flexibility",
+      "Custom designed long throw high-output single 10\" woofer",
+      "Max SPL – 114db",
+      "Requires SW-1 amplifier with DSP"
+    ],
+    "specs": [
+      [
+        "Woofer",
+        "2 x high-output woofers"
+      ],
+      [
+        "Freq. Response",
+        "20hz – 80hz +/- 3db"
+      ],
+      [
+        "Impedance",
+        "4Ω"
+      ],
+      [
+        "Power Handling",
+        "1000w"
+      ],
+      [
+        "Sensitivity",
+        "93dB @ 1m"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "572 x 940 x 178 mm"
+      ]
+    ],
+    "image_file": "image27.png",
+    "slide_idx": 23,
+    "slug": "scs-2-rtl",
+    "filename": "scs-2-rtl.html"
+  },
+  {
+    "model": "S90i RTL",
+    "category": "Subwoofer",
+    "features": [
+      "In wall or in ceiling installation",
+      "Regenerative transmission line technology",
+      "Highly detailed and dynamically accurate",
+      "Custom designed long throw high-output dual 5 x 7\" woofer",
+      "Max SPL - 123db @ 20hz",
+      "Optional port kit for extending port opening",
+      "Requires SW-1 amplifier with DSP"
+    ],
+    "specs": [
+      [
+        "Woofer",
+        "2 x high-output 5x7” woofers"
+      ],
+      [
+        "Freq. Response",
+        "20hz – 80hz +/- 2db"
+      ],
+      [
+        "Impedance",
+        "4Ω"
+      ],
+      [
+        "Power Handling",
+        "1000w"
+      ],
+      [
+        "Sensitivity",
+        "93dB @ 1m"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "2350 x 403 x 155 mm"
+      ]
+    ],
+    "image_file": "image28.png",
+    "slide_idx": 24,
+    "slug": "s90i-rtl",
+    "filename": "s90i-rtl.html"
+  },
+  {
+    "model": "S110i RTL",
+    "category": "Subwoofer",
+    "features": [
+      "In wall/floor/ceiling installation",
+      "Regenerative transmission Line design",
+      "Highly detailed and dynamically accurate",
+      "Custom designed high-output 10\" woofer",
+      "Max SPL - 128db @ 30hz",
+      "Optional port kit for extending port opening",
+      "Requires SW-1 amplifier with DSP"
+    ],
+    "specs": [
+      [
+        "Woofer",
+        "1 x high-output 10” woofer"
+      ],
+      [
+        "Freq. Response",
+        "20Hz to 80kHz ± 2dB"
+      ],
+      [
+        "Impedance",
+        "4Ω"
+      ],
+      [
+        "Power Handling",
+        "2000w"
+      ],
+      [
+        "Sensitivity",
+        "96dB @ 1m"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "1650 x 349 x 305 mm"
+      ]
+    ],
+    "image_file": "image29.png",
+    "slide_idx": 25,
+    "slug": "s110i-rtl",
+    "filename": "s110i-rtl.html"
+  },
+  {
+    "model": "STS RTL",
+    "category": "Subwoofer",
+    "features": [
+      "Freestanding, behind baffle, behind screen wall, ported into room",
+      "Regenerative transmission line technology",
+      "Detailed, dynamic accuracy with 2 high output 15” woofers",
+      "Optional floor/ceiling extension port kit",
+      "Multi-port design allows installation flexibility",
+      "Flat frequency response from 20Hz to 80Hz ±2dB",
+      "DSP Required",
+      "1 Channel of amplification per subwoofer"
+    ],
+    "specs": [
+      [
+        "Woofer",
+        "2 x high-output 14” woofer"
+      ],
+      [
+        "Freq. Response",
+        "16hz – 125hz +/- 3db"
+      ],
+      [
+        "Impedance",
+        "4Ω"
+      ],
+      [
+        "Power Handling",
+        "5000w"
+      ],
+      [
+        "Sensitivity",
+        "101dB / 2.83V @ 1m"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "1498 x 914 x 451 mm"
+      ]
+    ],
+    "image_file": "image30.png",
+    "slide_idx": 26,
+    "slug": "sts-rtl",
+    "filename": "sts-rtl.html"
+  },
+  {
+    "model": "SRS RTL",
+    "category": "Subwoofer",
+    "features": [
+      "Freestanding, behind baffle, behind screen wall, ported into room",
+      "Regenerative transmission line technology",
+      "Detailed, dynamic accuracy with 2 high output 10” woofers",
+      "Optional floor/ceiling extension port kit",
+      "Multi-port design allows installation flexibility",
+      "Flat frequency response across 20Hz to 80Hz ±3dB",
+      "DSP Required",
+      "1 Channel of amplification per subwoofer"
+    ],
+    "specs": [
+      [
+        "Woofer",
+        "2 x high-output 10” woofer"
+      ],
+      [
+        "Freq. Response",
+        "18hz – 125hz +/- 2db"
+      ],
+      [
+        "Impedance",
+        "4Ω"
+      ],
+      [
+        "Power Handling",
+        "1600w"
+      ],
+      [
+        "Sensitivity",
+        "125dB / 2.83V @ 1m"
+      ],
+      [
+        "Dimensions (H x W x D)",
+        "749.3 x 112 x 302 mm"
+      ]
+    ],
+    "image_file": "image31.png",
+    "slide_idx": 27,
+    "slug": "srs-rtl",
+    "filename": "srs-rtl.html"
+  }
+]
