@@ -338,21 +338,41 @@ async function loadProductList() {
 }
 
 // ── SIDEBAR ────────────────────────────────────────────────────────────
+// Use event delegation — avoids onclick quoting bugs entirely
+document.addEventListener('click', e => {
+  const item = e.target.closest('.prod-item[data-path]');
+  if (!item) return;
+  selectProduct(item.dataset.path, item.dataset.model, item.dataset.filename, item.dataset.mfr);
+});
+
 function renderSidebar(list) {
   const brands = ['mk', 'sonance', 'wisdom'];
   const names  = { mk: 'M&K Sound', sonance: 'Sonance', wisdom: 'Wisdom Audio' };
+  // Separate intro from product slides
+  const isIntro = p => p.fetchPath.includes('/intro/');
   let html = '';
   brands.forEach(b => {
-    const items = list.filter(p => p.brand === b);
-    if (!items.length) return;
-    html += `<div class="brand-hdr">${names[b]} (${items.length})</div>`;
-    items.forEach(p => {
+    const products = list.filter(p => p.brand === b && !isIntro(p));
+    const intros   = list.filter(p => p.brand === b && isIntro(p));
+    if (!products.length && !intros.length) return;
+    html += `<div class="brand-hdr">${names[b]} (${products.length} products)</div>`;
+    products.forEach(p => {
       const active = current.path === p.fetchPath ? ' active' : '';
-      html += `<div class="prod-item${active}" onclick="selectProduct(${JSON.stringify(p.fetchPath)},${JSON.stringify(p.model)},${JSON.stringify(p.filename)},${JSON.stringify(p.mfr)})">
+      html += `<div class="prod-item${active}" data-path="${p.fetchPath}" data-model="${p.model.replace(/"/g,'&quot;')}" data-filename="${p.filename}" data-mfr="${p.mfr.replace(/"/g,'&quot;')}">
         <div class="prod-name">${eh(p.model)}</div>
         <div class="prod-mfr">${eh(p.mfr)}</div>
       </div>`;
     });
+    if (intros.length) {
+      html += `<div class="brand-hdr" style="font-size:7px;opacity:0.6">Intro &amp; Info Slides (${intros.length})</div>`;
+      intros.forEach(p => {
+        const active = current.path === p.fetchPath ? ' active' : '';
+        html += `<div class="prod-item${active}" data-path="${p.fetchPath}" data-model="${p.model.replace(/"/g,'&quot;')}" data-filename="${p.filename}" data-mfr="${p.mfr.replace(/"/g,'&quot;')}">
+          <div class="prod-name" style="font-size:11px;font-weight:400">${eh(p.model)}</div>
+          <div class="prod-mfr">${eh(p.mfr)}</div>
+        </div>`;
+      });
+    }
   });
   document.getElementById('sbList').innerHTML = html ||
     '<div style="padding:16px;text-align:center;color:#aaa;font-size:12px">No products found</div>';
@@ -443,16 +463,27 @@ async function selectNewBrand(brand) {
     document.getElementById('tplStatus').textContent = '✓ Template ready — fill in the details below';
     return;
   }
-  const tpl = products.find(p => p.brand === brand);
-  if (!tpl) return toast('No template found for ' + brand, 'err');
+  // Only use product slides (not intro/cover slides) as templates
+  const candidates = products.filter(p => p.brand === brand && !p.fetchPath.includes('/intro/'));
+  if (!candidates.length) return toast('No product slides found for ' + brand, 'err');
   document.getElementById('tplStatus').textContent = 'Loading template…';
   try {
-    const r = await fetch(tpl.fetchPath + '?t=' + Date.now());
-    if (!r.ok) throw new Error('fetch failed');
-    tplCache[brand] = await r.text();
+    // Try candidates until we find one with the product slide structure
+    let found = false;
+    for (const tpl of candidates) {
+      const r = await fetch(tpl.fetchPath + '?t=' + Date.now());
+      if (!r.ok) continue;
+      const html = await r.text();
+      if (html.includes('id="featuresList"') && html.includes('id="specsTable"')) {
+        tplCache[brand] = html;
+        found = true;
+        break;
+      }
+    }
+    if (!found) throw new Error('No valid product template found');
     document.getElementById('tplStatus').textContent = '✓ Template ready — fill in the details below';
   } catch(e) {
-    document.getElementById('tplStatus').textContent = '✗ Could not load template';
+    document.getElementById('tplStatus').textContent = '✗ Could not load template: ' + e.message;
   }
 }
 

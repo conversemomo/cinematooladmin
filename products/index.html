@@ -34,9 +34,26 @@
   a:hover { color: #fff; }
   small { display: block; color: #555; font-size: 9px; letter-spacing: 1px; margin-top: 2px; text-transform: uppercase; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .footer { margin-top: 50px; padding-top: 20px; border-top: 1px solid #1a1a1a; font-size: 10px; color: #333; letter-spacing: 1px; text-align: center; }
+
+  /* ── HOVER THUMBNAIL PREVIEW ── */
+  #slide-preview {
+    position: fixed; pointer-events: none; z-index: 9999;
+    width: 320px; height: 180px; overflow: hidden;
+    border-radius: 6px; box-shadow: 0 8px 32px rgba(0,0,0,0.7);
+    border: 1px solid #333; opacity: 0;
+    transition: opacity 0.15s; background: #000;
+    display: none;
+  }
+  #slide-preview.visible { opacity: 1; display: block; }
+  #slide-preview iframe {
+    width: 960px; height: 540px; border: none;
+    transform: scale(0.3333); transform-origin: 0 0;
+    pointer-events: none;
+  }
 </style>
 </head>
 <body>
+<div id="slide-preview"><iframe id="previewIframe" src="about:blank"></iframe></div>
 <h1>Cinema Proposal</h1>
 <p class="subtitle">Product Page Index — Habitech</p>
 
@@ -590,5 +607,51 @@
 </div>
 
 <p class="footer">Habitech Cinema Proposal Builder</p>
+
+<script>
+(function() {
+  const preview  = document.getElementById('slide-preview');
+  const iframe   = document.getElementById('previewIframe');
+  let showTimer  = null;
+  let hideTimer  = null;
+  let lastHref   = null;
+
+  document.querySelectorAll('a[href]').forEach(a => {
+    const href = a.getAttribute('href');
+    if (!href || !href.endsWith('.html')) return;
+
+    a.addEventListener('mouseenter', function(e) {
+      clearTimeout(hideTimer);
+      showTimer = setTimeout(() => {
+        if (href !== lastHref) {
+          iframe.src = href;
+          lastHref = href;
+        }
+        positionPreview(e);
+        preview.classList.add('visible');
+      }, 120);
+    });
+
+    a.addEventListener('mousemove', positionPreview);
+
+    a.addEventListener('mouseleave', () => {
+      clearTimeout(showTimer);
+      hideTimer = setTimeout(() => preview.classList.remove('visible'), 80);
+    });
+  });
+
+  function positionPreview(e) {
+    const pw = 320, ph = 180, gap = 16;
+    const vw = window.innerWidth, vh = window.innerHeight;
+    let x = e.clientX + gap;
+    let y = e.clientY - ph / 2;
+    if (x + pw > vw) x = e.clientX - pw - gap;
+    if (y < gap) y = gap;
+    if (y + ph > vh - gap) y = vh - ph - gap;
+    preview.style.left = x + 'px';
+    preview.style.top  = y + 'px';
+  }
+})();
+</script>
 </body>
 </html>
