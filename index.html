@@ -369,23 +369,28 @@
   #print-area { display: none; }
   @media print {
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    html, body { width: 100%; height: 100%; margin: 0; padding: 0; }
     body > *:not(#print-area) { display: none !important; visibility: hidden !important; }
     #print-area { display: block !important; visibility: visible !important; }
+    /* Each wrapper fills exactly one page; iframe scaled via JS beforeprint */
     .print-slide-wrapper {
       display: block;
-      width: 960px; height: 540px;
+      width: 100vw; height: 100vh;
       overflow: hidden;
       page-break-after: always;
       break-after: page;
       page-break-inside: avoid;
       break-inside: avoid;
+      position: relative;
     }
     .print-slide-frame {
       display: block;
       width: 960px; height: 540px;
       border: none;
+      transform-origin: top left;
+      position: absolute; top: 0; left: 0;
     }
-    @page { size: 960px 540px landscape; margin: 0; }
+    @page { size: landscape; margin: 0; }
   }
   .spinner {
     width: 44px; height: 44px;
@@ -1006,6 +1011,32 @@ function scaleSlideIframes() {
   }, 50);
 }
 window.addEventListener('resize', scaleSlideIframes);
+
+// ─── PRINT SCALING ───────────────────────────────────────────────────────────
+// Before printing, scale each slide iframe to fill the page exactly.
+// We probe the actual print page dimensions using a full-page test element.
+window.addEventListener('beforeprint', function() {
+  const probe = document.createElement('div');
+  probe.style.cssText = 'position:fixed;top:0;left:0;width:100vw;height:100vh;visibility:hidden;';
+  document.body.appendChild(probe);
+  const pageW = probe.offsetWidth  || 1056;   // Letter landscape fallback
+  const pageH = probe.offsetHeight || 816;
+  probe.remove();
+
+  const scale = Math.min(pageW / 960, pageH / 540);
+  const offsetX = Math.round((pageW - 960 * scale) / 2);
+  const offsetY = Math.round((pageH - 540 * scale) / 2);
+
+  document.querySelectorAll('.print-slide-frame').forEach(f => {
+    f.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
+  });
+});
+
+window.addEventListener('afterprint', function() {
+  document.querySelectorAll('.print-slide-frame').forEach(f => {
+    f.style.transform = '';
+  });
+});
 
 // ─── DRAG TO REORDER ─────────────────────────────────────────────────────────
 let dragIdx = null;
