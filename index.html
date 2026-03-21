@@ -362,6 +362,23 @@
     gap: 16px;
   }
   #loading-overlay.show { display: flex; }
+
+  /* ── PRINT STYLES ── */
+  #print-area { display: none; }
+  @media print {
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+    body > *:not(#print-area) { display: none !important; visibility: hidden !important; }
+    #print-area { display: block !important; visibility: visible !important; position: fixed; top: 0; left: 0; width: 100%; }
+    .print-slide-frame {
+      display: block;
+      width: 960px; height: 540px;
+      border: none;
+      page-break-after: always;
+      break-after: page;
+      visibility: visible !important;
+    }
+    @page { size: 960px 540px landscape; margin: 0; }
+  }
   .spinner {
     width: 44px; height: 44px;
     border: 4px solid rgba(255,255,255,0.2);
@@ -393,8 +410,6 @@
   }
   .admin-btn:hover { border-color: rgba(255,255,255,0.5); color: rgba(255,255,255,0.75); }
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -685,6 +700,10 @@ const THUMB_OVERRIDES = {
   'wisdom-surface-mount-tensioned-screen-b': 'screen-research-sm-169.html',
   'wisdom-fixed-frame-screen-stewart':       'screen-research-classic-supreme-ff.html',
   'wisdom-supreme-e-mask-screen':            'screen-research-supreme-e-mask.html',
+  // Products with no HTML slide — use the JPG directly (full path from root)
+  'sonance-avr20': 'slides/sonance/Slide49.jpg',
+  'sonance-avr30': 'slides/sonance/Slide50.jpg',
+  'sonance-avr40': 'slides/sonance/Slide51.jpg',
 };
 
 function renderProducts() {
@@ -718,16 +737,25 @@ function renderProducts() {
     list.forEach(prod => {
       const sel     = selectedProductIds.has(prod.id);
       const nSlides = prod.slides.length;
-      // Derive the HTML path for the iframe thumbnail from the product id
+      // Derive the thumbnail path from the product id
       const dash    = prod.id.indexOf('-');
       const prefix  = dash >= 0 ? prod.id.substring(0, dash) : prod.id;
       const override = THUMB_OVERRIDES[prod.id];
-      const thumbSrc = override
-        ? `products/${prefix}/${override}`
-        : (dash >= 0 ? `products/${prefix}/${prod.id.substring(dash + 1)}.html` : (prod.slides[0] || ''));
+      let thumbSrc, thumbIsJpg;
+      if (override) {
+        // Override may be a full path (jpg) or just a filename (html)
+        thumbSrc  = override.startsWith('slides/') ? override : `products/${prefix}/${override}`;
+        thumbIsJpg = override.endsWith('.jpg');
+      } else {
+        thumbSrc  = dash >= 0 ? `products/${prefix}/${prod.id.substring(dash + 1)}.html` : (prod.slides[0] || '');
+        thumbIsJpg = thumbSrc.endsWith('.jpg');
+      }
+      const thumbEl = thumbIsJpg
+        ? `<img src="${thumbSrc}" style="width:100%;height:100%;object-fit:cover;">`
+        : `<iframe data-src="${thumbSrc}" scrolling="no" tabindex="-1" loading="lazy"></iframe>`;
       html += `<div class="product-card ${sel ? "selected" : ""}" data-pid="${prod.id}" onclick="toggleProduct(this.dataset.pid)">
         <input type="checkbox" ${sel ? "checked" : ""} onclick="event.stopPropagation(); toggleProduct(this.closest('.product-card').dataset.pid)">
-        <div class="product-thumb"><iframe data-src="${thumbSrc}" scrolling="no" tabindex="-1" loading="lazy"></iframe></div>
+        <div class="product-thumb">${thumbEl}</div>
         <div class="product-info">
           <div class="product-model">${prod.model}</div>
           <div class="product-subcat">${prod.subcategory || prod.category}</div>
@@ -994,17 +1022,15 @@ function clearProposal() {
 }
 
 // ─── PDF EXPORT ───────────────────────────────────────────────────────────────
-// Step 1: show filename modal → user types name → confirmExport() starts render.
-// Step 2: each slide is loaded into a hidden 960×540 iframe (srcdoc), dom-to-image
-//         runs INSIDE the iframe and sends the
-//         JPEG data URL back via postMessage. jsPDF assembles a fixed-size PDF and
-//         triggers a direct browser download — no popup or print dialog needed.
+// Step 1: show filename modal → user types name → confirmExport() loads slides.
+// Step 2: all slides are loaded into hidden iframes in a #print-area div, then
+//         window.print() is called on the current page (no popup). The browser's
+//         native renderer produces the PDF at perfect quality.
 
 function exportPDF() {
   if (!proposalSlides.length) return;
   const modal = document.getElementById('pdf-name-modal');
   const input = document.getElementById('pdf-name-input');
-  // Pre-fill with brand name
   input.value = activeBrand ? activeBrand + ' System' : 'Proposal';
   modal.classList.add('show');
   setTimeout(() => { input.focus(); input.select(); }, 80);
@@ -1015,112 +1041,48 @@ function closePdfModal() {
 }
 
 async function confirmExport() {
-  const rawName = document.getElementById('pdf-name-input').value.trim() || 'Proposal';
-  const filename = 'Cinema Proposal - ' + rawName + '.pdf';
   closePdfModal();
 
   const overlay = document.getElementById('loading-overlay');
   const msg     = document.getElementById('loading-msg');
   overlay.classList.add('show');
+  msg.textContent = 'Loading slides…';
 
-  try {
-    const { jsPDF } = window.jspdf;
-    // 720 × 405 pt = 10 in × 5.625 in (matches 960×540 px at 96 dpi)
-    const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: [720, 405] });
-    let firstPage = true;
+  // Remove any leftover print area from a previous export
+  const old = document.getElementById('print-area');
+  if (old) old.remove();
 
-    for (let i = 0; i < proposalSlides.length; i++) {
-      msg.textContent = `Rendering slide ${i + 1} of ${proposalSlides.length}…`;
-      const dataUrl = await renderSlideToJpeg(proposalSlides[i].path);
-      if (!firstPage) pdf.addPage([720, 405], 'landscape');
-      pdf.addImage(dataUrl, 'JPEG', 0, 0, 720, 405);
-      firstPage = false;
-    }
+  const printArea = document.createElement('div');
+  printArea.id = 'print-area';
 
-    msg.textContent = 'Saving…';
-    pdf.save(filename);
-
-  } catch (err) {
-    alert('PDF export failed: ' + err.message);
-    console.error(err);
-  } finally {
-    overlay.classList.remove('show');
+  const iframes = [];
+  for (let i = 0; i < proposalSlides.length; i++) {
+    msg.textContent = `Loading slide ${i + 1} of ${proposalSlides.length}…`;
+    const iframe = document.createElement('iframe');
+    iframe.className = 'print-slide-frame';
+    iframe.src = proposalSlides[i].path;
+    printArea.appendChild(iframe);
+    iframes.push(iframe);
+    // Append to DOM immediately so browser starts loading
+    if (i === 0) document.body.appendChild(printArea);
   }
-}
 
-// Renders one HTML slide at 2× resolution via html2canvas inside a hidden iframe,
-// returning a JPEG data URL. Uses postMessage to bridge the same-origin iframe.
-async function renderSlideToJpeg(htmlPath) {
-  const resp = await fetch(htmlPath + '?t=' + Date.now());
-  if (!resp.ok) throw new Error('Could not load slide: ' + htmlPath);
-  const rawHtml = await resp.text();
+  // Wait for all iframes to load
+  await Promise.all(iframes.map(f => new Promise(resolve => {
+    f.onload = resolve;
+    f.onerror = resolve;
+    // Safety timeout per frame
+    setTimeout(resolve, 10000);
+  })));
 
-  const absUrl = new URL(htmlPath, window.location.href).href;
-  const dir    = absUrl.substring(0, absUrl.lastIndexOf('/') + 1);
-  const captureId = Math.random().toString(36).slice(2);
+  // Small extra delay for fonts & images inside iframes
+  await new Promise(r => setTimeout(r, 800));
 
-  // Strip editor chrome; inject base href + dom-to-image CDN
-  let html = rawHtml
-    .replace(/<p class="demo-label"[\s\S]*?<\/p>/g, '')
-    .replace(/<div class="edit-controls"[\s\S]*?<\/div>/g, '')
-    .replace(/<div id="layoutPanel"[\s\S]*?<\/div>/g, '')
-    .replace(/<input[^>]*type="file"[^>]*>/g, '')
-    .replace(/<\/head>/,
-      `<base href="${dir}">` +
-      `<script src="https://cdnjs.cloudflare.com/ajax/libs/dom-to-image/2.6.0/dom-to-image.min.js"><\/script>` +
-      `</head>`);
+  overlay.classList.remove('show');
+  window.print();
 
-  // Capture script runs inside the iframe: waits for fonts + images then
-  // calls domtoimage.toJpeg on the .slide element at 2× scale
-  const captureScript = `<script>
-(async function() {
-  try {
-    if (document.fonts && document.fonts.ready) await document.fonts.ready;
-    await Promise.all(Array.from(document.images).map(img =>
-      img.complete ? Promise.resolve() :
-      new Promise(r => { img.onload = r; img.onerror = r; })
-    ));
-    await new Promise(r => setTimeout(r, 600));
-    const target = document.querySelector('.slide') || document.documentElement;
-    const dataUrl = await domtoimage.toJpeg(target, {
-      width: 960, height: 540,
-      style: { transform: 'scale(1)', transformOrigin: 'top left' },
-      quality: 0.95
-    });
-    window.parent.postMessage({
-      type: 'slide-capture', id: '${captureId}',
-      dataUrl: dataUrl
-    }, '*');
-  } catch(e) {
-    window.parent.postMessage({ type: 'slide-capture', id: '${captureId}', error: e.message }, '*');
-  }
-})();
-<\/script>`;
-
-  html = html.replace(/<\/body>/, captureScript + '</body>');
-
-  return new Promise((resolve, reject) => {
-    const frame = document.createElement('iframe');
-    frame.style.cssText = 'position:fixed;left:-9999px;top:0;width:960px;height:540px;border:none;';
-    document.body.appendChild(frame);
-
-    const timeout = setTimeout(() => {
-      window.removeEventListener('message', handler);
-      if (frame.parentNode) document.body.removeChild(frame);
-      reject(new Error('Timed out: ' + htmlPath));
-    }, 60000);
-
-    function handler(e) {
-      if (!e.data || e.data.type !== 'slide-capture' || e.data.id !== captureId) return;
-      clearTimeout(timeout);
-      window.removeEventListener('message', handler);
-      if (frame.parentNode) document.body.removeChild(frame);
-      if (e.data.error) { reject(new Error(e.data.error)); return; }
-      resolve(e.data.dataUrl);
-    }
-    window.addEventListener('message', handler);
-    frame.srcdoc = html;
-  });
+  // Clean up after printing
+  setTimeout(() => { if (printArea.parentNode) printArea.remove(); }, 1500);
 }
 
 function yyyymmdd() {
