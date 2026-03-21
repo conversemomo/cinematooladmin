@@ -367,24 +367,27 @@
 
   /* ── PRINT STYLES ── */
   #print-area { display: none; }
-  @page { size: 720pt 405pt; margin: 0; }
+  /* landscape is universally respected; any landscape page is ≥1056px wide > 960px slide */
+  @page { size: landscape; margin: 0; }
   @media print {
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
     body > *:not(#print-area) { display: none !important; visibility: hidden !important; }
     #print-area { display: block !important; visibility: visible !important; }
     .print-slide-wrapper {
       display: block;
-      width: 960px; height: 540px;
-      overflow: hidden;
+      width: 100vw; height: 56.25vw; /* fill page width × 16:9 height */
+      overflow: hidden; position: relative;
       page-break-after: always;
       break-after: page;
       page-break-inside: avoid;
       break-inside: avoid;
     }
     .print-slide-frame {
-      display: block;
+      display: block; border: none;
+      position: absolute; top: 0; left: 0;
       width: 960px; height: 540px;
-      border: none;
+      transform-origin: top left;
+      /* transform scale is applied inline by JS before window.print() */
     }
   }
   .spinner {
@@ -1102,10 +1105,32 @@ async function confirmExport() {
 
     const iframe = document.createElement('iframe');
     iframe.className = 'print-slide-frame';
+    iframe.width  = '960';
+    iframe.height = '540';
+    iframe.scrolling = 'no';
 
     // Register onload BEFORE setting src so we never miss it
     loadPromises.push(new Promise(resolve => {
-      iframe.onload = resolve;
+      iframe.onload = () => {
+        // Force viewport to 960px and strip body padding/flex
+        try {
+          const doc = iframe.contentDocument;
+          if (doc && doc.head) {
+            // Ensure viewport is exactly 960px wide
+            let vp = doc.querySelector('meta[name="viewport"]');
+            if (!vp) { vp = doc.createElement('meta'); vp.name = 'viewport'; doc.head.appendChild(vp); }
+            vp.content = 'width=960';
+            // Strip body padding/flex so .slide sits flush at 0,0
+            const s = doc.createElement('style');
+            s.textContent =
+              'html, body { margin:0!important; padding:0!important; overflow:hidden!important;' +
+              ' display:block!important; width:960px!important; height:540px!important; }' +
+              ' .demo-label, .edit-controls, #layoutPanel { display:none!important; }';
+            doc.head.appendChild(s);
+          }
+        } catch(e) {}
+        resolve();
+      };
       iframe.onerror = resolve;
       setTimeout(resolve, 12000);
     }));
@@ -1121,8 +1146,22 @@ async function confirmExport() {
   // Small extra delay for fonts & images inside iframes
   await new Promise(r => setTimeout(r, 800));
 
+  // Scale the 960px iframe to fill a standard landscape page.
+  // @page { size: landscape; margin: 0 } → Letter landscape = 1056×816px CSS,
+  // A4 landscape ≈ 1123×794px CSS. Scale to the narrower (letter) so the slide
+  // fills the page on both paper sizes without clipping.
+  // scale = min(1056/960, 816/540) = min(1.1, 1.51) = 1.1
+  const PRINT_PAGE_W = 1056, PRINT_PAGE_H = 816; // letter landscape in CSS px
+  const scale = Math.min(PRINT_PAGE_W / 960, PRINT_PAGE_H / 540); // 1.1
+  document.querySelectorAll('.print-slide-frame').forEach(f => {
+    f.style.transform = `scale(${scale.toFixed(4)})`;
+  });
+
   overlay.classList.remove('show');
   window.print();
+
+  // Remove transform after printing
+  document.querySelectorAll('.print-slide-frame').forEach(f => { f.style.transform = ''; });
 
   // Clean up after printing
   setTimeout(() => { if (printArea.parentNode) printArea.remove(); }, 1500);
