@@ -302,6 +302,53 @@
     padding: 1px 4px;
   }
 
+  /* ── PRODUCT THUMB (iframe-based) ── */
+  .product-thumb {
+    width: 56px;
+    height: 36px;
+    border-radius: 2px;
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+    background: #111;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-thumb iframe {
+    position: absolute;
+    top: 0; left: 0;
+    width: 960px; height: 540px;
+    border: none;
+    transform-origin: 0 0;
+    transform: scale(0.0583);
+    pointer-events: none;
+  }
+
+  /* ── PDF FILENAME MODAL ── */
+  #pdf-name-modal {
+    display: none;
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+  }
+  #pdf-name-modal.show { display: flex; }
+  .pdf-modal-box {
+    background: #fff;
+    border-radius: 8px;
+    padding: 24px;
+    width: 440px;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  }
+  .pdf-modal-title { font-family: 'Montserrat', sans-serif; font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .pdf-modal-sub   { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+  .pdf-name-row    { display: flex; align-items: stretch; border: 1.5px solid var(--border); border-radius: 4px; overflow: hidden; margin-bottom: 18px; }
+  .pdf-prefix, .pdf-suffix { padding: 9px 10px; background: var(--bg); font-size: 12px; color: var(--muted); font-family: 'Karla', sans-serif; white-space: nowrap; }
+  .pdf-prefix { border-right: 1px solid var(--border); }
+  .pdf-suffix { border-left:  1px solid var(--border); }
+  .pdf-name-field  { flex: 1; border: none; padding: 9px 10px; font-size: 13px; font-family: 'Karla', sans-serif; outline: none; min-width: 0; }
+  .pdf-modal-btns  { display: flex; gap: 10px; justify-content: flex-end; }
+
   /* ── LOADING OVERLAY ── */
   #loading-overlay {
     display: none;
@@ -346,6 +393,8 @@
   }
   .admin-btn:hover { border-color: rgba(255,255,255,0.5); color: rgba(255,255,255,0.75); }
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
@@ -441,6 +490,27 @@
 <div id="loading-overlay">
   <div class="spinner"></div>
   <div id="loading-msg">Building PDF…</div>
+</div>
+
+<!-- PDF FILENAME MODAL -->
+<div id="pdf-name-modal">
+  <div class="pdf-modal-box">
+    <h3 class="pdf-modal-title">Export PDF</h3>
+    <p class="pdf-modal-sub">Enter a name for the downloaded file.</p>
+    <div class="pdf-name-row">
+      <span class="pdf-prefix">Cinema Proposal –</span>
+      <input id="pdf-name-input" type="text" class="pdf-name-field" placeholder="M&amp;K System"
+             onkeydown="if(event.key==='Enter')confirmExport()">
+      <span class="pdf-suffix">.pdf</span>
+    </div>
+    <div class="pdf-modal-btns">
+      <button class="btn btn-secondary" onclick="closePdfModal()">Cancel</button>
+      <button class="btn btn-primary" onclick="confirmExport()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export
+      </button>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -595,11 +665,15 @@ function renderProducts() {
     html += `<div class="section-header">${cat}</div>`;
     list.forEach(prod => {
       const sel     = selectedProductIds.has(prod.id);
-      const thumb   = prod.slides[0] || "";
       const nSlides = prod.slides.length;
+      // Derive the HTML path for the iframe thumbnail from the product id
+      const dash    = prod.id.indexOf('-');
+      const thumbSrc = dash >= 0
+        ? `products/${prod.id.substring(0, dash)}/${prod.id.substring(dash + 1)}.html`
+        : (prod.slides[0] || '');
       html += `<div class="product-card ${sel ? "selected" : ""}" data-pid="${prod.id}" onclick="toggleProduct(this.dataset.pid)">
         <input type="checkbox" ${sel ? "checked" : ""} onclick="event.stopPropagation(); toggleProduct(this.closest('.product-card').dataset.pid)">
-        <img class="product-thumb" src="${thumb}" alt="${prod.model}" loading="lazy" onerror="this.style.visibility='hidden'">
+        <div class="product-thumb"><iframe data-src="${thumbSrc}" scrolling="no" tabindex="-1" loading="lazy"></iframe></div>
         <div class="product-info">
           <div class="product-model">${prod.model}</div>
           <div class="product-subcat">${prod.subcategory || prod.category}</div>
@@ -610,6 +684,34 @@ function renderProducts() {
     });
   }
   el.innerHTML = html;
+  lazyLoadProductThumbs();
+}
+
+function lazyLoadProductThumbs() {
+  const productList = document.getElementById('product-list');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return;
+      const iframe = entry.target.querySelector('iframe[data-src]');
+      if (iframe) {
+        iframe.src = iframe.dataset.src;
+        delete iframe.dataset.src;
+        // Inject overlay-hiding CSS once loaded
+        iframe.onload = () => {
+          try {
+            const doc = iframe.contentDocument;
+            if (!doc || !doc.head) return;
+            const s = doc.createElement('style');
+            s.textContent = '.demo-label,.edit-controls,#layoutPanel,input[type="file"]{display:none!important}';
+            doc.head.appendChild(s);
+          } catch(e) {}
+        };
+      }
+      observer.unobserve(entry.target);
+    });
+  }, { root: productList, rootMargin: '120px' });
+
+  productList.querySelectorAll('.product-thumb').forEach(thumb => observer.observe(thumb));
 }
 
 // ─── TOGGLE PRODUCT ──────────────────────────────────────────────────────────
@@ -837,147 +939,138 @@ function clearProposal() {
   }
 }
 
-// ─── PDF EXPORT — native browser print (perfect quality, matches HTML view) ────
-// Fetches each slide HTML, extracts the .slide element + its styles, makes all
-// asset URLs absolute, then assembles a single print-ready document and opens
-// it in a new window where window.print() is auto-called.
-// The browser renders everything natively — fonts, images, CSS — at full fidelity.
+// ─── PDF EXPORT ───────────────────────────────────────────────────────────────
+// Step 1: show filename modal → user types name → confirmExport() starts render.
+// Step 2: each slide is loaded into a hidden 960×540 iframe (srcdoc), html2canvas
+//         runs INSIDE the iframe at scale:2 (→ 1920×1080 capture) and sends the
+//         JPEG data URL back via postMessage. jsPDF assembles a fixed-size PDF and
+//         triggers a direct browser download — no popup or print dialog needed.
 
-// Rewrite url() references inside CSS text to absolute URLs
-function absUrlInCss(css, base) {
-  return css.replace(/url\(\s*(['"]?)(?!https?:|data:|#)([^'")\s]+)\1\s*\)/g,
-    (m, q, path) => {
-      try { return 'url("' + new URL(path, base).href + '")'; }
-      catch(e) { return m; }
-    });
-}
-
-// Rewrite src/href attributes in HTML text to absolute URLs
-function absUrlInHtml(html, base) {
-  return html
-    .replace(/\b(src|href)="(?!https?:|data:|#|javascript:)([^"]+)"/g, (m, attr, path) => {
-      try { return attr + '="' + new URL(path, base).href + '"'; }
-      catch(e) { return m; }
-    })
-    .replace(/url\(\s*(['"]?)(?!https?:|data:|#)([^'")\s]+)\1\s*\)/g, (m, q, path) => {
-      try { return 'url("' + new URL(path, base).href + '")'; }
-      catch(e) { return m; }
-    });
-}
-
-async function exportPDF() {
+function exportPDF() {
   if (!proposalSlides.length) return;
+  const modal = document.getElementById('pdf-name-modal');
+  const input = document.getElementById('pdf-name-input');
+  // Pre-fill with brand name
+  input.value = activeBrand ? activeBrand + ' System' : 'Proposal';
+  modal.classList.add('show');
+  setTimeout(() => { input.focus(); input.select(); }, 80);
+}
 
-  const overlay = document.getElementById("loading-overlay");
-  const msg     = document.getElementById("loading-msg");
-  overlay.classList.add("show");
+function closePdfModal() {
+  document.getElementById('pdf-name-modal').classList.remove('show');
+}
+
+async function confirmExport() {
+  const rawName = document.getElementById('pdf-name-input').value.trim() || 'Proposal';
+  const filename = 'Cinema Proposal - ' + rawName + '.pdf';
+  closePdfModal();
+
+  const overlay = document.getElementById('loading-overlay');
+  const msg     = document.getElementById('loading-msg');
+  overlay.classList.add('show');
 
   try {
-    // ── Fetch and extract each slide ───────────────────────────────────────
-    const pages = [];
-    const seenFontHrefs = new Set();
-    const seenCssBlocks = new Set();
-    const fontLinkTags  = [];
-    const cssBlocks     = [];
+    const { jsPDF } = window.jspdf;
+    // 720 × 405 pt = 10 in × 5.625 in (matches 960×540 px at 96 dpi)
+    const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: [720, 405] });
+    let firstPage = true;
 
     for (let i = 0; i < proposalSlides.length; i++) {
-      msg.textContent = `Loading slide ${i + 1} of ${proposalSlides.length}…`;
-      const path = proposalSlides[i].path;
-
-      const resp = await fetch(path + '?t=' + Date.now());
-      if (!resp.ok) { console.warn('Skipping (fetch failed):', path); continue; }
-      const rawHtml = await resp.text();
-
-      // Absolute base for this slide's assets
-      const absUrl = new URL(path, window.location.href).href;
-      const dir    = absUrl.substring(0, absUrl.lastIndexOf('/') + 1);
-
-      const doc = new DOMParser().parseFromString(rawHtml, 'text/html');
-
-      // Collect Google Fonts / external stylesheet links (deduplicated)
-      doc.querySelectorAll('link[rel="stylesheet"]').forEach(l => {
-        const href = l.getAttribute('href') || '';
-        if (!seenFontHrefs.has(href)) {
-          seenFontHrefs.add(href);
-          fontLinkTags.push(`<link rel="stylesheet" href="${href}">`);
-        }
-      });
-
-      // Collect <style> blocks, make url() paths absolute (deduplicated by content)
-      doc.querySelectorAll('style').forEach(s => {
-        const css = absUrlInCss(s.textContent, dir);
-        if (!seenCssBlocks.has(css)) { seenCssBlocks.add(css); cssBlocks.push(css); }
-      });
-
-      // Extract the .slide element and absolutise its asset references
-      const slideEl = doc.querySelector('.slide');
-      if (!slideEl) { console.warn('No .slide found in', path); continue; }
-
-      // Carry the slide's own background-color as an inline style so it
-      // is never overridden by another slide's CSS rule
-      const computedBg = slideEl.style.background || slideEl.style.backgroundColor || '';
-      if (!computedBg) {
-        // Extract from the slide's own <style> block
-        const bgMatch = rawHtml.match(/\.slide\s*\{[^}]*background(?:-color)?\s*:\s*([^;}\n]+)/);
-        if (bgMatch) slideEl.style.backgroundColor = bgMatch[1].trim();
-      }
-
-      pages.push(absUrlInHtml(slideEl.outerHTML, dir));
+      msg.textContent = `Rendering slide ${i + 1} of ${proposalSlides.length}…`;
+      const dataUrl = await renderSlideToJpeg(proposalSlides[i].path);
+      if (!firstPage) pdf.addPage([720, 405], 'landscape');
+      pdf.addImage(dataUrl, 'JPEG', 0, 0, 720, 405);
+      firstPage = false;
     }
 
-    if (!pages.length) throw new Error('No slides could be loaded.');
-
-    msg.textContent = 'Opening print window…';
-
-    // ── Build the print document ────────────────────────────────────────────
-    const printHtml = `<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-${fontLinkTags.join('\n')}
-<style>
-${cssBlocks.join('\n')}
-@page { size: 960px 540px; margin: 0; }
-html, body { margin: 0; padding: 0; background: #000; }
-.slide { page-break-after: always; page-break-inside: avoid; display: block !important; }
-.slide:last-of-type { page-break-after: avoid; }
-/* strip any editor UI that wasn't cleaned from the HTML */
-.demo-label, .edit-controls, #layoutPanel, input[type="file"],
-.bullet-del, .row-del { display: none !important; }
-[contenteditable] { outline: none; }
-</style>
-</head>
-<body>
-${pages.join('\n')}
-<script>
-// Auto-print once fonts + images are ready
-window.addEventListener('load', function() {
-  var imgs = document.images;
-  var pending = imgs.length;
-  function tryPrint() { if (--pending <= 0) setTimeout(function(){ window.print(); }, 800); }
-  if (!pending) { setTimeout(function(){ window.print(); }, 1200); return; }
-  for (var i = 0; i < imgs.length; i++) {
-    if (imgs[i].complete) { tryPrint(); }
-    else { imgs[i].addEventListener('load', tryPrint); imgs[i].addEventListener('error', tryPrint); }
-  }
-});
-<\/script>
-</body>
-</html>`;
-
-    // ── Open print window ───────────────────────────────────────────────────
-    const win = window.open('', '_blank', 'width=980,height=600');
-    if (!win) throw new Error('Pop-up blocked — please allow pop-ups for this page and try again.');
-    win.document.open();
-    win.document.write(printHtml);
-    win.document.close();
+    msg.textContent = 'Saving…';
+    pdf.save(filename);
 
   } catch (err) {
     alert('PDF export failed: ' + err.message);
     console.error(err);
   } finally {
-    overlay.classList.remove("show");
+    overlay.classList.remove('show');
   }
+}
+
+// Renders one HTML slide at 2× resolution via html2canvas inside a hidden iframe,
+// returning a JPEG data URL. Uses postMessage to bridge the same-origin iframe.
+async function renderSlideToJpeg(htmlPath) {
+  const resp = await fetch(htmlPath + '?t=' + Date.now());
+  if (!resp.ok) throw new Error('Could not load slide: ' + htmlPath);
+  const rawHtml = await resp.text();
+
+  const absUrl = new URL(htmlPath, window.location.href).href;
+  const dir    = absUrl.substring(0, absUrl.lastIndexOf('/') + 1);
+  const captureId = Math.random().toString(36).slice(2);
+
+  // Strip editor chrome; inject base href + html2canvas CDN
+  let html = rawHtml
+    .replace(/<p class="demo-label"[\s\S]*?<\/p>/g, '')
+    .replace(/<div class="edit-controls"[\s\S]*?<\/div>/g, '')
+    .replace(/<div id="layoutPanel"[\s\S]*?<\/div>/g, '')
+    .replace(/<input[^>]*type="file"[^>]*>/g, '')
+    .replace(/<\/head>/,
+      `<base href="${dir}">` +
+      `<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"><\/script>` +
+      `</head>`);
+
+  // Capture script runs inside the iframe: waits for fonts + images then
+  // calls html2canvas at scale:2 on the .slide element (960×540 → 1920×1080)
+  const captureScript = `<script>
+(async function() {
+  try {
+    if (document.fonts && document.fonts.ready) await document.fonts.ready;
+    await Promise.all(Array.from(document.images).map(img =>
+      img.complete ? Promise.resolve() :
+      new Promise(r => { img.onload = r; img.onerror = r; })
+    ));
+    await new Promise(r => setTimeout(r, 600));
+    const target = document.querySelector('.slide') || document.documentElement;
+    const canvas = await html2canvas(target, {
+      width: 960, height: 540,
+      windowWidth: 960, windowHeight: 540,
+      scale: 2,
+      useCORS: true,
+      allowTaint: false,
+      backgroundColor: '#000000',
+      logging: false
+    });
+    window.parent.postMessage({
+      type: 'slide-capture', id: '${captureId}',
+      dataUrl: canvas.toDataURL('image/jpeg', 0.95)
+    }, '*');
+  } catch(e) {
+    window.parent.postMessage({ type: 'slide-capture', id: '${captureId}', error: e.message }, '*');
+  }
+})();
+<\/script>`;
+
+  html = html.replace(/<\/body>/, captureScript + '</body>');
+
+  return new Promise((resolve, reject) => {
+    const frame = document.createElement('iframe');
+    frame.style.cssText = 'position:fixed;left:-9999px;top:0;width:960px;height:540px;border:none;';
+    document.body.appendChild(frame);
+
+    const timeout = setTimeout(() => {
+      window.removeEventListener('message', handler);
+      if (frame.parentNode) document.body.removeChild(frame);
+      reject(new Error('Timed out: ' + htmlPath));
+    }, 60000);
+
+    function handler(e) {
+      if (!e.data || e.data.type !== 'slide-capture' || e.data.id !== captureId) return;
+      clearTimeout(timeout);
+      window.removeEventListener('message', handler);
+      if (frame.parentNode) document.body.removeChild(frame);
+      if (e.data.error) { reject(new Error(e.data.error)); return; }
+      resolve(e.data.dataUrl);
+    }
+    window.addEventListener('message', handler);
+    frame.srcdoc = html;
+  });
 }
 
 function yyyymmdd() {
