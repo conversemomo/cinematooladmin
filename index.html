@@ -365,31 +365,7 @@
   }
   #loading-overlay.show { display: flex; }
 
-  /* ── PRINT STYLES ── */
-  #print-area { display: none; }
-  /* Exact 1920×1080px page — matches 16:9 HD slide dimensions */
-  @page { size: 1920px 1080px; margin: 0; }
-  @media print {
-    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-    body > *:not(#print-area) { display: none !important; visibility: hidden !important; }
-    #print-area { display: block !important; visibility: visible !important; }
-    .print-slide-wrapper {
-      display: block;
-      width: 1920px; height: 1080px;
-      overflow: hidden; position: relative;
-      page-break-after: always;
-      break-after: page;
-      page-break-inside: avoid;
-      break-inside: avoid;
-    }
-    .print-slide-frame {
-      display: block; border: none;
-      position: absolute; top: 0; left: 0;
-      width: 960px; height: 540px;
-      transform-origin: top left;
-      /* transform scale(2) applied inline by JS: 960×2=1920, 540×2=1080 */
-    }
-  }
+  /* Print styles removed — PDF is generated via jsPDF+html2canvas, not window.print() */
   .spinner {
     width: 44px; height: 44px;
     border: 4px solid rgba(255,255,255,0.2);
@@ -1061,10 +1037,8 @@ function clearProposal() {
 }
 
 // ─── PDF EXPORT ───────────────────────────────────────────────────────────────
-// Step 1: show filename modal → user types name → confirmExport() loads slides.
-// Step 2: all slides are loaded into hidden iframes in a #print-area div, then
-//         window.print() is called on the current page (no popup). The browser's
-//         native renderer produces the PDF at perfect quality.
+// Uses jsPDF + html2canvas to render each slide at exactly 1920×1080px and
+// assemble them into a PDF with 1920×1080pt pages (no browser print dialog).
 
 function exportPDF() {
   if (!proposalSlides.length) return;
@@ -1079,91 +1053,108 @@ function closePdfModal() {
   document.getElementById('pdf-name-modal').classList.remove('show');
 }
 
+function _loadScript(src) {
+  return new Promise((resolve, reject) => {
+    if (document.querySelector(`script[src="${src}"]`)) { resolve(); return; }
+    const s = document.createElement('script');
+    s.src = src; s.onload = resolve; s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
 async function confirmExport() {
+  // Capture filename before closing modal
+  const nameInput  = document.getElementById('pdf-name-input');
+  const customName = (nameInput ? nameInput.value.trim() : '') || 'Proposal';
   closePdfModal();
 
   const overlay = document.getElementById('loading-overlay');
   const msg     = document.getElementById('loading-msg');
   overlay.classList.add('show');
-  msg.textContent = 'Loading slides…';
+  msg.textContent = 'Loading PDF libraries…';
 
-  // Remove any leftover print area from a previous export
-  const old = document.getElementById('print-area');
-  if (old) old.remove();
+  // Load jsPDF and html2canvas on demand (internet required)
+  try {
+    await Promise.all([
+      _loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'),
+      _loadScript('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js')
+    ]);
+  } catch(e) {
+    overlay.classList.remove('show');
+    alert('Could not load PDF libraries. Please check your internet connection and try again.');
+    return;
+  }
 
-  const printArea = document.createElement('div');
-  printArea.id = 'print-area';
+  const { jsPDF } = window.jspdf;
+  // 1920×1080pt page = 1920×1080 pixels at PDF standard 72 dpi
+  const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: [1920, 1080] });
 
-  const loadPromises = [];
-  document.body.appendChild(printArea);
+  // Off-screen container (never visible to user)
+  const container = document.createElement('div');
+  container.style.cssText = 'position:fixed;left:-2000px;top:0;width:960px;height:540px;overflow:hidden;pointer-events:none;';
+  document.body.appendChild(container);
 
   for (let i = 0; i < proposalSlides.length; i++) {
-    msg.textContent = `Loading slide ${i + 1} of ${proposalSlides.length}…`;
-
-    const wrapper = document.createElement('div');
-    wrapper.className = 'print-slide-wrapper';
+    msg.textContent = `Rendering slide ${i + 1} of ${proposalSlides.length}…`;
 
     const iframe = document.createElement('iframe');
-    iframe.className = 'print-slide-frame';
-    iframe.width  = '960';
-    iframe.height = '540';
+    iframe.style.cssText = 'width:960px;height:540px;border:none;display:block;';
     iframe.scrolling = 'no';
+    container.appendChild(iframe);
 
-    // Register onload BEFORE setting src so we never miss it
-    loadPromises.push(new Promise(resolve => {
+    // Load slide, strip body padding, wait for fonts/images to settle
+    await new Promise(resolve => {
+      const timeout = setTimeout(resolve, 12000);
       iframe.onload = () => {
-        // Force viewport to 960px and strip body padding/flex
+        clearTimeout(timeout);
         try {
           const doc = iframe.contentDocument;
           if (doc && doc.head) {
-            // Ensure viewport is exactly 960px wide
             let vp = doc.querySelector('meta[name="viewport"]');
             if (!vp) { vp = doc.createElement('meta'); vp.name = 'viewport'; doc.head.appendChild(vp); }
             vp.content = 'width=960';
-            // Strip body padding/flex so .slide sits flush at 0,0
             const s = doc.createElement('style');
             s.textContent =
-              'html, body { margin:0!important; padding:0!important; overflow:hidden!important;' +
-              ' display:block!important; width:960px!important; height:540px!important; }' +
-              ' .demo-label, .edit-controls, #layoutPanel { display:none!important; }';
+              'html,body{margin:0!important;padding:0!important;overflow:hidden!important;' +
+              'display:block!important;width:960px!important;height:540px!important;}' +
+              '.demo-label,.edit-controls,#layoutPanel{display:none!important;}';
             doc.head.appendChild(s);
           }
         } catch(e) {}
-        resolve();
+        setTimeout(resolve, 800); // let fonts/images settle
       };
-      iframe.onerror = resolve;
-      setTimeout(resolve, 12000);
-    }));
+      iframe.onerror = () => { clearTimeout(timeout); resolve(); };
+      iframe.src = proposalSlides[i].path;
+    });
 
-    wrapper.appendChild(iframe);
-    printArea.appendChild(wrapper);
-    iframe.src = proposalSlides[i].path;
+    // Capture .slide element at 2× scale → 1920×1080 canvas
+    try {
+      const doc    = iframe.contentDocument;
+      const target = (doc && doc.querySelector('.slide')) || (doc && doc.body);
+      if (target) {
+        const canvas = await html2canvas(target, {
+          scale: 2,
+          width: 960, height: 540,
+          useCORS: true, allowTaint: true,
+          backgroundColor: '#000000',
+          logging: false,
+          windowWidth: 960, windowHeight: 540,
+          x: 0, y: 0
+        });
+        const imgData = canvas.toDataURL('image/jpeg', 0.92);
+        if (i > 0) pdf.addPage([1920, 1080], 'landscape');
+        pdf.addImage(imgData, 'JPEG', 0, 0, 1920, 1080, '', 'FAST');
+      }
+    } catch(err) {
+      console.error(`Slide ${i + 1} capture error:`, err);
+    }
+
+    container.removeChild(iframe);
   }
 
-  // Wait for all iframes to load
-  await Promise.all(loadPromises);
-
-  // Small extra delay for fonts & images inside iframes
-  await new Promise(r => setTimeout(r, 800));
-
-  // Scale the 960×540 iframe to fill the 1920×1080 page exactly.
-  // @page { size: 1920px 1080px; margin: 0 } → scale = 1920/960 = 2.0
-  // At scale 2: 960×2=1920px wide, 540×2=1080px tall — perfect fill, no gaps.
-  const scale = 1920 / 960; // exactly 2.0
-  document.querySelectorAll('.print-slide-frame').forEach(f => {
-    f.style.transform = `scale(${scale})`;
-  });
-
+  container.remove();
+  pdf.save(`Cinema Proposal – ${customName}.pdf`);
   overlay.classList.remove('show');
-  // Wait two animation frames so the browser paints the transforms before the print dialog opens
-  await new Promise(r => requestAnimationFrame(() => requestAnimationFrame(r)));
-  window.print();
-
-  // Remove transform after printing
-  document.querySelectorAll('.print-slide-frame').forEach(f => { f.style.transform = ''; });
-
-  // Clean up after printing
-  setTimeout(() => { if (printArea.parentNode) printArea.remove(); }, 1500);
 }
 
 function yyyymmdd() {
