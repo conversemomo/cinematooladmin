@@ -1071,25 +1071,25 @@ async function confirmExport() {
   const overlay = document.getElementById('loading-overlay');
   const msg     = document.getElementById('loading-msg');
   overlay.classList.add('show');
-  msg.textContent = 'Loading PDF libraries…';
+  msg.textContent = 'Loading PDF library…';
 
-  // Load jsPDF and html2canvas on demand (internet required)
+  const JSPDF_CDN = 'https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js';
+  const H2C_CDN   = 'https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js';
+
+  // Load jsPDF into the parent page
   try {
-    await Promise.all([
-      _loadScript('https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js'),
-      _loadScript('https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js')
-    ]);
+    await _loadScript(JSPDF_CDN);
   } catch(e) {
     overlay.classList.remove('show');
-    alert('Could not load PDF libraries. Please check your internet connection and try again.');
+    alert('Could not load PDF library. Please check your internet connection and try again.');
     return;
   }
 
   const { jsPDF } = window.jspdf;
-  // 1920×1080pt page = 1920×1080 pixels at PDF standard 72 dpi
+  // 1920×1080pt = 1920×1080 pixels at PDF standard 72 dpi — exact HD resolution
   const pdf = new jsPDF({ orientation: 'landscape', unit: 'pt', format: [1920, 1080] });
 
-  // Off-screen container (never visible to user)
+  // Off-screen container — left: -2000px keeps it invisible
   const container = document.createElement('div');
   container.style.cssText = 'position:fixed;left:-2000px;top:0;width:960px;height:540px;overflow:hidden;pointer-events:none;';
   document.body.appendChild(container);
@@ -1102,7 +1102,7 @@ async function confirmExport() {
     iframe.scrolling = 'no';
     container.appendChild(iframe);
 
-    // Load slide, strip body padding, wait for fonts/images to settle
+    // Load slide and strip body padding/flex so .slide sits flush at 0,0
     await new Promise(resolve => {
       const timeout = setTimeout(resolve, 12000);
       iframe.onload = () => {
@@ -1121,30 +1121,46 @@ async function confirmExport() {
             doc.head.appendChild(s);
           }
         } catch(e) {}
-        setTimeout(resolve, 800); // let fonts/images settle
+        setTimeout(resolve, 700); // let fonts/images settle
       };
       iframe.onerror = () => { clearTimeout(timeout); resolve(); };
       iframe.src = proposalSlides[i].path;
     });
 
-    // Capture .slide element at 2× scale → 1920×1080 canvas
+    // ── Capture ──────────────────────────────────────────────────────────────
+    // html2canvas is injected INTO the iframe so it runs in the same origin as
+    // the slide's images/fonts — avoids cross-origin canvas taint on file:// URLs.
     try {
-      const doc    = iframe.contentDocument;
-      const target = (doc && doc.querySelector('.slide')) || (doc && doc.body);
-      if (target) {
-        const canvas = await html2canvas(target, {
-          scale: 2,
-          width: 960, height: 540,
-          useCORS: true, allowTaint: true,
-          backgroundColor: '#000000',
-          logging: false,
-          windowWidth: 960, windowHeight: 540,
-          x: 0, y: 0
+      const iDoc = iframe.contentDocument;
+      const iWin = iframe.contentWindow;
+      if (!iDoc || !iWin) throw new Error('iframe inaccessible');
+
+      // Inject html2canvas into the iframe (once per iframe instance)
+      if (!iWin.html2canvas) {
+        await new Promise((res, rej) => {
+          const s = iDoc.createElement('script');
+          s.src = H2C_CDN;
+          s.onload = res; s.onerror = rej;
+          iDoc.head.appendChild(s);
         });
-        const imgData = canvas.toDataURL('image/jpeg', 0.92);
-        if (i > 0) pdf.addPage([1920, 1080], 'landscape');
-        pdf.addImage(imgData, 'JPEG', 0, 0, 1920, 1080, '', 'FAST');
       }
+
+      const target = iDoc.querySelector('.slide') || iDoc.body;
+
+      // Run html2canvas inside the iframe; scale 2 → 960→1920, 540→1080
+      const imgData = await iWin.html2canvas(target, {
+        scale: 2,
+        width: 960, height: 540,
+        useCORS: true, allowTaint: true,
+        backgroundColor: '#000000',
+        logging: false,
+        windowWidth: 960, windowHeight: 540,
+        x: 0, y: 0
+      }).then(c => c.toDataURL('image/jpeg', 0.92));
+
+      if (i > 0) pdf.addPage([1920, 1080], 'landscape');
+      pdf.addImage(imgData, 'JPEG', 0, 0, 1920, 1080, '', 'FAST');
+
     } catch(err) {
       console.error(`Slide ${i + 1} capture error:`, err);
     }
